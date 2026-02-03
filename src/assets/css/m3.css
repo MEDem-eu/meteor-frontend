@@ -35,9 +35,9 @@
     --md-text-button-outline-color: #0e68b9;
     --md-text-button-label-text-color: var(--color-text);
 
-    --md-text-button-disabled-label-text-color: white;
-    --md-text-button-disabled-label-text-opacity: white;
-    --md-text-button-focus-label-text-color: white;
+    --md-text-button-disabled-label-text-color: var(--color-text);
+    --md-text-button-disabled-label-text-opacity: var(--color-text);
+    --md-text-button-focus-label-text-color: var(--color-text);
 
     /* Filled Text Field  */
     --md-filled-text-field-container-shape: 5px;

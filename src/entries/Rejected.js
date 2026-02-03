@@ -95,7 +95,8 @@ const Rejected = () => {
                 />
             </div>
 
-            {/* Raw Data */}
+
+            {/* Debug Data
             {process.env.NODE_ENV === "development" && item &&
                 <div className="divTable">
                     <DetailHeader
@@ -105,6 +106,8 @@ const Rejected = () => {
                     />
                 </div>
             }
+
+            */}
         </>
     )
 

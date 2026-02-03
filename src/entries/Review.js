@@ -174,7 +174,8 @@ const Review = () => {
 
             </div>
 
-            {/* Raw Data */}
+            {/* Debug Data
+            
             {process.env.NODE_ENV === "development" && items && 1 === 1 &&
                 <div className="divTable">
                     <DetailHeader
@@ -184,6 +185,8 @@ const Review = () => {
                     />
                 </div>
             }
+
+            */}
 
         </>
     )
