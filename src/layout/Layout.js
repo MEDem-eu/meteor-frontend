@@ -40,9 +40,9 @@ const Layout = () => {
                 </div>
             </main>
 
-            <footer className="footer mt-auto py-3">
+            <footer className="footer">
                 <div className="container">
-                <div className="container-fluid">
+               
                     <div className="footer-row">
                         <div className="footer-col-left">
                             <Link to="about">About</Link> · <Link to="privacy">Privacy Policy & Disclaimer</Link> · <Link to="imprint">Imprint</Link> · <Link to="accreditation">Accreditation</Link>
@@ -58,7 +58,7 @@ const Layout = () => {
                         <p>Meteor is published under the <Link to="imprint"> CC-BY-SA 4.0 license</Link>. See <Link to="about">about page</Link> for details. Data can also be accessed via the <a target="_blank" href={apiURL()}>API</a>.</p>
                         <p>Meteor API Version: <Version /></p>
                     </div>
-                </div>
+                
                 </div>
             </footer>
 

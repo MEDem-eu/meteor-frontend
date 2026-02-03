@@ -42,66 +42,15 @@ h4{
     color: #cccccc;
 }
 
-footer{
-    color: #cccccc !important;
-    background-color: #333333 !important;
-}
 
-footer a{
-    color: lightskyblue;
-}
 
-footer a:hover{
-    color: lightskyblue;
-}
-
-.footer-text{
-    font-size: small !important;;
-}
-
-.footer-col-left, .footer-col-right {
-    float: left;
-    width: 50%;
-}
-
-/* Clear floats after the columns */
-.footer-row:after{
-    content: "";
-    display: table;
-    clear: both;
-    margin-bottom: 10px;
-}
-.footer-col-right{
-    text-align: right;
-}
-
-.container-footer{
-    padding: 0 20px;
-}
-
-/* .bg-dark{
-    background-color: black !important;
-} */
 
 .container-fluid{
-    width:95% !important;
+     width:95% !important; 
 }
 
-a{
-     /*color: #0c64ad;*/
-     color: lightskyblue;
-     text-decoration: none !important;
- }
 
-a:hover{
-    color: lightskyblue;
-    text-decoration: underline !important;
 
-}
-/* 
-h2{
-    color: #cccccc;
-} */
 
 .slick h3 {
     background: #5f9ea0;
@@ -198,10 +147,6 @@ h2{
 
 .slick-dots li.slick-active button::before{
     color: white !important;
-}
-
-.container{
-    margin-bottom: 50px;
 }
 
 .home-text{
