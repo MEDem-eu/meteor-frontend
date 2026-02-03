@@ -12,6 +12,13 @@
 /* Bootstrap variables */
 :root {
     --bs-navbar-color: black;
+
   
+}
+
+.navbar {
+    --bs-navbar-color: var(--color-text);
+    background-color: var(--color-background);
+    
 }
 

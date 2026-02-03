@@ -28,12 +28,12 @@
     /* Text Button */
     --md-text-button-container-shape: 5px;
     --md-text-button-label-text-font: system-ui;
-    --md-text-button-hover-label-text-color: white;
-    --md-text-button-pressed-label-text-color: white;
-    --md-text-button-hover-state-layer-color: darkblue;
+    --md-text-button-hover-label-text-color: var(--color-text);
+    --md-text-button-pressed-label-text-color: var(--color-text);
+    --md-text-button-hover-state-layer-color: var(--color-primary);
     --md-text-button-hover-state-layer-opacity: 100;
     --md-text-button-outline-color: #0e68b9;
-    --md-text-button-label-text-color: white;
+    --md-text-button-label-text-color: var(--color-text);
 
     --md-text-button-disabled-label-text-color: white;
     --md-text-button-disabled-label-text-opacity: white;
