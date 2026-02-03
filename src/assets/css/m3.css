@@ -19,10 +19,10 @@
     /* Filled Button */
     --md-filled-button-container-shape: 5px;
     --md-filled-button-label-text-font: system-ui;
-    --md-filled-button-container-color: #0e68b9;
-    --md-filled-button-label-text-color: white;
-    --md-filled-button-hover-label-text-color: white;
-    --md-filled-button-hover-state-layer-color: darkblue;
+    --md-filled-button-container-color: var(--color-secondary);
+    --md-filled-button-label-text-color: var(--color-text-secondary);
+    --md-filled-button-hover-label-text-color: black;
+    --md-filled-button-hover-state-layer-color: var(--color-primary);
     --md-filled-button-hover-state-layer-opacity: 100;
 
     /* Text Button */

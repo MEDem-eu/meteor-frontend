@@ -15,7 +15,7 @@ import NoPage from "../pages/NoPage";
 import NotImplemented from "../pages/NotImplemented";
 import Search from "../search/Search";
 import SearchLink from "../search/SearchLink";
-import Login from "../user/Login";
+import LoginPage from "../pages/LoginPage";
 import UseToken from "../user/UseToken";
 import Logout from "../user/Logout";
 import {UserContext} from "../user/UserContext";
@@ -72,7 +72,7 @@ const App = () =>  {
                 <Route path="about" element={<About />} />
 
                 {/* User pages */}
-                <Route path="login" element={<Login setToken={setToken} token={token} setProfile={setProfile} />} />
+                <Route path="login" element={<LoginPage setToken={setToken} token={token} setProfile={setProfile} />} />
                 <Route path="register" element={<Register />} />
                 <Route path="register/resend" element={<ResendVerificationEmail />} />
                 <Route path="logout" element={<Logout />} />

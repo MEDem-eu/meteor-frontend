@@ -1,0 +1,14 @@
+h1 {
+    background-color: var(--color-primary);
+    color: var(--color-text-secondary);
+    font-weight: bold;
+    width: 100vw;
+    height: 8rem;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 3rem;
+}

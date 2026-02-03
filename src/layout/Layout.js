@@ -19,7 +19,7 @@ const Layout = () => {
     return (
         <>
             <header>
-                <nav className="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+                <nav className="navbar navbar-expand-md fixed-top">
                     <div className="container-fluid">
                         <Link className="navbar-brand" to="/"><img src={logo} width="64" /></Link><Link className="navbar-brand" to="/">METEOR</Link>
                         <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
