@@ -7,7 +7,9 @@
   --color-tertiary:#3d7c9f;
   --color-accent: #e59425;
   
-  --color-links: lightskyblue;
+  
+  --color-link: var(--color-secondary);
+  --color-link-secondary: lightskyblue; 
 }
 
 

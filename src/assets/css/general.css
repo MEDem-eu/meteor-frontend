@@ -37,6 +37,14 @@ footer{
     align-items: center;
 }
 
+footer a{
+    color: var(--color-link-secondary);
+}
+
+footer a:hover{
+    color: var(--color-link-secondary);
+}
+
 .footer-row {
   display: flex;            
   justify-content: space-between; 

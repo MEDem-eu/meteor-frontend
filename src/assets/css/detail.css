@@ -19,7 +19,8 @@
     display: table;
     width: 100%;
     margin-bottom: 10px;
-    background-color: #333333;
+    /* background-color: #333333; */
+    background-color: var(--color-primary);
     padding: 10px;
     border-radius: 10px;
 }
@@ -48,7 +49,8 @@
 }
 
 .divTableHead{
-    color: #cccccc;
+    /* color: #cccccc; */
+    color: var(--color-secondary);
     width: 200px;
 }
 .divTableCell, .divTableCellTitle{
@@ -75,7 +77,8 @@
     padding-right: 10px;
 }
 .divTable a{
-    color: lightskyblue;
+    /* color: lightskyblue; */
+    color: var(--color-links);
 }
 pre {
     white-space: pre-wrap;       /* Since CSS 2.1 */

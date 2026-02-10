@@ -163,6 +163,14 @@ h4{
     color: var(--color-text-secondary);
 }
 
+.home-login a{
+    color: var(--color-link-secondary);
+}
+
+.home-login a:hover{
+    color: var(--color-link-secondary);
+}
+
 .login-register, .profile{
     margin-bottom: 10px;
 }

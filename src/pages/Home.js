@@ -53,7 +53,7 @@ const Home = () => {
 
     return (
         <>
-            <h1>Welcome to Meteor</h1>
+            <h1>Welcome to MEDem Meteor</h1>
 
             <div className="home-login">
                 {!loggedIn &&
