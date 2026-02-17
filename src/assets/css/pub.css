@@ -189,7 +189,7 @@ body{
 }
 .message{
     font-weight: bold;
-    color: orange;
+    color: var(--color-accent);
     margin-bottom: 20px;
 }
 .message a{
