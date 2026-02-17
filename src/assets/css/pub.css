@@ -25,14 +25,15 @@ body{
 }
 
 .magic{
-    background-color: #333333;
+    /* background-color: #333333; */
+    background-color: var(--color-primary);
     border-radius: 10px;
     padding:10px;
 }
 
-h4{
+/* h4{
     color: #cccccc;
-}
+} */
 
 #root{
     height: 100%;

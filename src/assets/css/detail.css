@@ -3,7 +3,8 @@
 .divHeader{
     width: 100%;
     margin-bottom: 10px;
-    background-color: #333333;
+    /* background-color: #333333; */
+    background-color: var(--color-primary);
     padding: 10px;
     border-radius: 10px;
     overflow: hidden;
@@ -80,6 +81,11 @@
     /* color: lightskyblue; */
     color: var(--color-links);
 }
+
+.divTable h4{
+    color: var(--color-secondary);
+}
+
 pre {
     white-space: pre-wrap;       /* Since CSS 2.1 */
     white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
@@ -92,7 +98,7 @@ pre {
 }
 .reduced, .divTableCellSubText{
     font-size: 80%;
-    color: #eee;
+    color: var(--color-text);
 }
 .full_text{
     border-radius: 5px;
@@ -115,8 +121,10 @@ pre {
 
 .divDetailColumn {
     flex: 50%;
-    background-color: #666;
-    color: white;
+    /* background-color: #666;
+    color: white; */
+    background-color: var(--color-secondary);
+    color: var(--color-text-secondary);
     padding:10px;
     margin:10px;
     border-radius: 10px;
