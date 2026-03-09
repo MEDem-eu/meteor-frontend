@@ -53,7 +53,7 @@ const Home = () => {
 
     return (
         <>
-            <h1>Welcome to Meteor</h1>
+            <h1>Welcome to MEDem Meteor</h1>
 
             <div className="home-login">
                 {!loggedIn &&
@@ -88,7 +88,7 @@ const Home = () => {
 
                 {logout &&
                     <>
-                        <div style={{borderRadius:'10px', backgroundColor:'#444444', padding:'10px', marginBottom:'10px'}}>
+                        <div style={{borderRadius:'10px', backgroundColor:'var(--color-primary)', padding:'10px', marginBottom:'10px'}}>
                             <span className='message'>You are logged out!</span>
                             <br />
                             <strong>Hint:</strong> Try ticking the 'Remember Me' box when logging in to stay logged in for longer!

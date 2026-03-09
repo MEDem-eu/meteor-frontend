@@ -1,0 +1,28 @@
+:root {
+  --color-primary: #b3e1f9;
+  --color-secondary: #055b8a;
+  --color-background: #ffffff;
+  --color-text: #000000;
+  --color-text-secondary: #ffffff;
+  --color-tertiary:#3d7c9f;
+  --color-accent: #e59425;
+  
+  
+  --color-link: var(--color-secondary);
+  --color-link-secondary: lightskyblue; 
+}
+
+
+/* Bootstrap variables */
+:root {
+    --bs-navbar-color: black;
+
+  
+}
+
+.navbar {
+    --bs-navbar-color: var(--color-text);
+    background-color: var(--color-background);
+    
+}
+

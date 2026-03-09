@@ -9,7 +9,7 @@ import 'dayjs/locale/en-gb';
 
 const DatePickerValue = ({fieldValue, onChangeEvent, fieldName}) => {
 
-    let color = '#ffffff'
+    let color = '#666666'
 
     const newTheme = createTheme({
             components: {
@@ -56,7 +56,7 @@ const DatePickerValue = ({fieldValue, onChangeEvent, fieldName}) => {
                                         borderRadius: '2px',
                                         borderWidth: '2px',
                                         border: '2px solid',
-                                        backgroundColor: '#666666',
+                                        backgroundColor: 'hsl(0, 0%, 90%)',
                                     }
                                 },
                             }}
@@ -73,7 +73,7 @@ const DatePickerValue = ({fieldValue, onChangeEvent, fieldName}) => {
                                         borderRadius: '2px',
                                         borderWidth: '2px',
                                         border: '2px solid',
-                                        backgroundColor: '#666666',
+                                        backgroundColor: 'hsl(0, 0%, 90%)',
                                     }
                                 },
                             }}

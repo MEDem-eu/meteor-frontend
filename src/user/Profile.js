@@ -76,6 +76,7 @@ const Profile = () => {
     return (
         <>
             <div>
+                <h1>User Profile</h1>
                 {profile &&
                     <>
                         {message &&
@@ -171,7 +172,9 @@ const Profile = () => {
                     </>
                 }
 
-                {/* Raw Data */}
+                {/* Debug Data
+            
+            
                 {process.env.NODE_ENV === "development" && 
                     <div className="divTable">
                         <DetailHeader
@@ -182,7 +185,7 @@ const Profile = () => {
                     </div>
                 }
 
-                {/* Login Data */}
+                
                 {process.env.NODE_ENV === "development" && 
                     <div className="divTable">
                         <DetailHeader
@@ -192,6 +195,7 @@ const Profile = () => {
                         />
                     </div>
                 }
+                */}
 
             </div>
         </>

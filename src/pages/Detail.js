@@ -1366,7 +1366,8 @@ const Detail = () => {
                 </>
             }
 
-            {/* Raw Data */}
+            {/* Debug Data
+
             {process.env.NODE_ENV === "development" && item &&
                 <div className="divTable">
                     <DetailHeader
@@ -1377,7 +1378,7 @@ const Detail = () => {
                 </div>
             }
 
-            {/* Reverse Data */}
+            
             {process.env.NODE_ENV === "development" && reverse &&
                 <div className="divTable">
                     <DetailHeader
@@ -1387,6 +1388,9 @@ const Detail = () => {
                     />
                 </div>
             }
+                
+            */}
+
         </>
     )
 };

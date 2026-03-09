@@ -18,6 +18,8 @@ and with the contribution of resources from other OPTED Work Packages:
 - 129 text resources for texts by political parties were contributed by Work Package 4 (Greene et al, 2021).
 - 195 text resources for legislative texts were contributed by Work Package 5 (Sebők et al, 2021).
 
+&nbsp;
+
 ## Contact
 
 You can reach us via various means. If you have feedback or questions you 
@@ -27,11 +29,15 @@ tweet [@OPTED_H2020](https://twitter.com/OPTED_H2020).
 In case some technical aspect is not working you can raise an issue in our 
 [GitHub repository](https://github.com/opted-eu).
 
+&nbsp;
+
 ## Contributors
 
 - Principal Investigator: Univ.-Prof. Hajo Boomgaarden, PhD
 - Scientific Team: Dr. Michele Scotto di Vettimo, Paul Balluff, Dr. Fabienne Lind, Marvin Stecker, Celina Dinhopl, Univ.-Prof. Dr. Annie Waldherr, and Prof. Susan Banducci
 - Technical Implementation: Paul Balluff & Ian Wellaway
+
+&nbsp;
 
 ## References
 
@@ -50,9 +56,11 @@ We also used additional references for improving and extending the data on Meteo
 - Bederke, P., Döring, H., Regel, S. (2023). Party Facts [Dataset]. [partyfacts.org](https://partyfacts.herokuapp.com/) (Disambiguate political parties).
 - Schwaiger, L. (2022). Gegen die Öffentlichkeit: Alternative Nachrichtenmedien im deutschsprachigen Raum. Bielefeld: transcript Verlag. [10.1515/9783839461211](https://www.transcript-open.de/isbn/6121) (List of alternative media for German speaking countries).
 
-# Conditions of Use
+&nbsp;
 
-## Data Licencing
+## Conditions of Use
+
+### Data Licencing
 
 Meteor is published under the [CC-BY-SA 4.0 license](https://creativecommons.org/licenses/by-sa/4.0/deed.en). 
 This means you are free to share and adapt Meteor data, 
@@ -61,7 +69,7 @@ redistribution or derivate works.
 
 *Note that this does **not** apply to the individual resources that Meteor links to.*
 
-## Citation Requirements
+### Citation Requirements
 
 If you are using Meteor as a dataset, please use the following citations:
 
@@ -72,7 +80,9 @@ If you are using Meteor as a dataset, please use the following citations:
 - Sebők, M., Proksch, S. and Rauh, C. (2021). Review of available parliamentary corpora. [OPTED Devliverable (D5.1)](https://opted.eu/results/project-reports/).
 - Scotto di Vettimo, M., Banducci, M., Gelovani, S., Theocharis, Y., & Horvath, L. (2021) Report on a Curation Workflow for the OPTED Platform.
 
-# Coverage of Meteor
+&nbsp;
+
+## Coverage of Meteor
 
 Meteor is a continuously growing database and depends on the contributions 
 of other OPTED Work Packages as well as of individual users. 

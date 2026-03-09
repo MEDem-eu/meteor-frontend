@@ -7,14 +7,16 @@
 }
 
 .flex-item{
-    background-color: #333333;
+    /* background-color: #333333; */
+    background-color: var(--color-primary);
     padding: 10px;
     margin:10px 10px;
     border-radius: 10px;
     min-height: 110px;
 }
 .item-title{
-    color: lightskyblue;
+    /* color: lightskyblue; */
+    color: var(--color-secondary);
     font-size: x-large;
 }
 
@@ -36,7 +38,7 @@
 }
 .flex-item a, .flex-item a:hover{
     text-decoration: none !important;
-    color: white;
+    color: var(--color-text);
 }
 .is_footer{
     width: 100%;
@@ -58,7 +60,7 @@
     margin-bottom:10px;
 }
 .infobox{
-    background-color: #333333;
+    background-color: var(--color-primary);
     border-radius: 10px;
     padding: 10px;
     margin-left: 10px;

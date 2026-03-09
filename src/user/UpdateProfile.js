@@ -73,11 +73,14 @@ const UpdateProfile = () => {
         //console.log(data_json)
 
         const ret = await updateUser(data_json);
-        //console.log(ret)
+        // console.log(ret)
         if (ret.status === 200) {
             setError(null)
+
+            await getData()
+
             navigate(
-                '/profile?msg=' + ret.message()
+                '/profile?msg=' + ret.message
             )
         } else {
             setError(ret.message)
@@ -161,7 +164,10 @@ const UpdateProfile = () => {
                     </form>
                 }
 
-                {/* Raw Data */}
+   
+                {/* Debug Data
+                
+                 
                 <div className="divTable">
                     <DetailHeader
                         t="Raw Data"
@@ -170,7 +176,7 @@ const UpdateProfile = () => {
                     />
                 </div>
 
-                {/* Login Data */}
+                 
                 <div className="divTable">
                     <DetailHeader
                         t="Login Data"
@@ -178,10 +184,13 @@ const UpdateProfile = () => {
                         p="true"
                     />
                 </div>
+                */}
+                
 
             </div>
         </>
     )
+    
 
 };
 
