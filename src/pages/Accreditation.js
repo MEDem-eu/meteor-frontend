@@ -1,5 +1,13 @@
 import {useEffect} from "react";
 
+import imgCyrusEngerer from "../assets/img/256px-Cyrus_Engerer_addressing_PL_AGM_2013.jpeg"
+import imgEuropeanParliament from "../assets/img/256px-European-parliament-strasbourg-inside.jpeg";
+import imgHouseOfCommons from "../assets/img/256px-House_of_Commons_2010.jpeg";
+import imgProtestGreece from "../assets/img/256px-Working-class_protest_in_Greece.jpeg";
+import imgIowaStateFair from "../assets/img/256px-Politics_at_the_2015_Iowa_State_Fair_20424491760_2.jpeg";
+
+
+
 const Accreditation = () => {
 
     useEffect(() => {
@@ -16,7 +24,7 @@ const Accreditation = () => {
             <p>The OPTED Meteor website uses the following images:</p>
 
             <p>
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/European-parliament-strasbourg-inside.jpg/256px-European-parliament-strasbourg-inside.jpg" />
+                <img src={ imgEuropeanParliament } />
             </p>
 
             <p>
@@ -27,7 +35,7 @@ const Accreditation = () => {
             </p>
 
             <p>
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Cyrus_Engerer_addressing_PL_AGM_2013.JPG/256px-Cyrus_Engerer_addressing_PL_AGM_2013.JPG" />
+                <img src= { imgCyrusEngerer }/>
             </p>
 
             <p>
@@ -38,7 +46,7 @@ const Accreditation = () => {
             </p>
 
             <p>
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/House_of_Commons_2010.jpg/256px-House_of_Commons_2010.jpg" />
+                <img src={ imgHouseOfCommons } />
             </p>
 
             <p>
@@ -49,7 +57,7 @@ const Accreditation = () => {
             </p>
 
             <p>
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Working-class_protest_in_Greece.JPG/256px-Working-class_protest_in_Greece.JPG" />
+                <img src={ imgProtestGreece } />
             </p>
 
             <p>
@@ -60,7 +68,7 @@ const Accreditation = () => {
             </p>
 
             <p>
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Politics_at_the_2015_Iowa_State_Fair_%2820424491760%29_%282%29.jpg/256px-Politics_at_the_2015_Iowa_State_Fair_%2820424491760%29_%282%29.jpg" />
+                <img src={ imgIowaStateFair } />
             </p>
 
             <p>
