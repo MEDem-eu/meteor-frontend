@@ -1,6 +1,11 @@
 import React, {useEffect, useState} from "react";
 import Slider from "react-slick";
 import { Link } from "react-router-dom";
+import imgCyrusEngerer from "../assets/img/256px-Cyrus_Engerer_addressing_PL_AGM_2013.jpeg"
+import imgEuropeanParliament from "../assets/img/256px-European-parliament-strasbourg-inside.jpeg";
+import imgHouseOfCommons from "../assets/img/256px-House_of_Commons_2010.jpeg";
+import imgProtestGreece from "../assets/img/256px-Working-class_protest_in_Greece.jpeg";
+
 
 const SimpleSlider = () => {
     const settings = {
@@ -114,18 +119,11 @@ const SimpleSlider = () => {
     }
 
     const bg_img = [
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/European-parliament-strasbourg-inside.jpg/256px-European-parliament-strasbourg-inside.jpg",
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Cyrus_Engerer_addressing_PL_AGM_2013.JPG/256px-Cyrus_Engerer_addressing_PL_AGM_2013.JPG",
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/House_of_Commons_2010.jpg/256px-House_of_Commons_2010.jpg",
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Working-class_protest_in_Greece.JPG/256px-Working-class_protest_in_Greece.JPG"
+        imgCyrusEngerer,
+        imgEuropeanParliament,
+        imgHouseOfCommons,
+        imgProtestGreece
     ]
-
-    const getImg = (i) => {
-        if (i > 3){
-            i = i%4
-        }
-        return 'url(' + bg_img[i] + ')'
-    }
 
     return (
         <div className="slick">
@@ -135,7 +133,7 @@ const SimpleSlider = () => {
                         {items.map((item, index) => (
                             <div key={item._unique_name}>
                                 <Link to={getlink(item._unique_name)}>
-                                    <div className="item" style={{backgroundImage:getImg(index)}}>
+                                    <div className="item" style={{backgroundImage:`url(${bg_img[index % bg_img.length]})`}}>
                                         <div className="item-overlay">
                                             <div className="item-title-slick">{showItemName(item.name)}</div>
                                             <div className="item-type-slick">{getDgraph(item)}</div>

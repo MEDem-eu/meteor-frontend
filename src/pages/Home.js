@@ -107,8 +107,7 @@ const Home = () => {
 
             <br clear="all"/>
             {<SlickRecent />}
-            {/*<SlickHome1 />*/}
-            {/*<SlickHome2 />*/}
+
         </>
     )
 };
