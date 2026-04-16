@@ -10,6 +10,7 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import Version from "../components/Version";
+import VersionFrontend from "../components/VersionFrontend";
 import React from "react";
 
 const Layout = () => {
@@ -66,6 +67,7 @@ const Layout = () => {
                         <p>The initial version of METEOR was developed as part of OPTED (Observatory for Political Texts in European Democracies). The OPTED project received funding from the European Union’s Horizon 2020 research and innovation programme under grant agreement No 951832.</p>
                         <p>The document reflects only the authors’ views. The European Union is not liable for any use that may be made of the information contained herein.</p>
                         <p>Meteor is published under the <Link to="imprint"> CC-BY-SA 4.0 license</Link>. See <Link to="about">about page</Link> for details. Data can also be accessed via the <a target="_blank" href={apiURL()}>API</a>.</p>
+                        <p>Frontend Version: <VersionFrontend /></p>
                         <p>Meteor API Version: <Version /></p>
                     </div>
                 
