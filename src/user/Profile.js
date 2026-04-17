@@ -1,6 +1,7 @@
 import React, {useContext, useEffect, useState} from 'react';
 import '@material/web/textfield/filled-text-field.js'
 import '@material/web/button/filled-button.js';
+import '@material/web/button/outlined-button.js';
 import '@material/web/button/text-button.js';
 import {UserContext} from "./UserContext";
 import {useNavigate, Link, useSearchParams} from "react-router-dom";
@@ -143,9 +144,9 @@ const Profile = () => {
                         </div>
 
                         <div style={{"marginBottom":20}}>
-                            <md-filled-button style={{marginRight:"10px"}} type="button" onClick={() => navigate('/profile/update')}>Update Profile</md-filled-button>
-                            <md-text-button style={{marginRight:"10px"}} type="button" onClick={() => navigate('/profile/password/change')}>Change Password</md-text-button>
-                            <md-text-button style={{marginRight:"10px"}} type="button" onClick={() => showDialog()}>Delete Account</md-text-button>
+                            <md-filled-button class="md-button-manual-outline" style={{marginRight:"10px"}} type="button" onClick={() => navigate('/profile/update')}>Update Profile</md-filled-button>
+                            <md-outlined-button style={{marginRight:"10px"}} type="button" onClick={() => navigate('/profile/password/change')}>Change Password</md-outlined-button>
+                            <md-outlined-button style={{marginRight:"10px"}} type="button" onClick={() => showDialog()}>Delete Account</md-outlined-button>
                         </div>
 
                         <md-dialog id='dialog'>

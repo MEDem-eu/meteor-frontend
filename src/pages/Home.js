@@ -7,6 +7,7 @@ import {useNavigate, useSearchParams, Link} from "react-router-dom";
 import getLoggedIn from "../user/getLoggedIn";
 import {ProfileContext} from "../user/ProfileContext";
 import getProfile from "../user/getProfile";
+import '@material/web/button/filled-button.js';
 
 const Home = () => {
 
@@ -69,13 +70,13 @@ const Home = () => {
                                     {profile && (
                                         <>
                                             &nbsp;as:<br />
-                                            <Link to='/profile/'>{profile.email}</Link>
+                                            <Link style={{color:'var(--color-secondary)'}} to='/profile/'>{profile.email}</Link>
                                         </>
                                         )
                                     }
                                 </p>
                                 <div align='right' style={{borderTop:'1px solid grey', paddingTop:'10px'}}>
-                                    <md-text-button type="button" onClick={() => navigate('/logout/')}>Logout</md-text-button>
+                                    <md-filled-button class="md-button-manual-outline" type="button" onClick={() => navigate('/logout/')}>Logout</md-filled-button>
                                 </div>
                             </>
                         )}

@@ -101,7 +101,7 @@ const ChangePassword = () => {
                 }
 
                 <div className="login-register">
-                    <md-filled-button type="submit">Change Password</md-filled-button>
+                    <md-filled-button class="md-button-manual-outline" type="submit">Change Password</md-filled-button>
                 </div>
 
             </form>

@@ -2,6 +2,7 @@ import {useNavigate} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import '@material/web/button/filled-button.js';
 import '@material/web/button/text-button.js';
+import '@material/web/button/outlined-button.js';
 import { Tooltip } from "@mui/material";
 import Select from 'react-select'
 import TypeDescription from "../components/TypeDescription";
@@ -340,8 +341,8 @@ const SearchForm = () => {
                             />
                     </div>
                 }
-                <div style={{clear:"left", "marginBottom":20}}>
-                    <md-filled-button type="submit" id="submitFormSearch">Search</md-filled-button> <md-text-button type="button" onClick={() => navigate('search')}>Advanced Search</md-text-button>
+                <div style={{clear:"left", "marginBottom":20}} className="md-button-on-white">
+                    <md-filled-button class="md-button-manual-outline" type="submit" id="submitFormSearch">Search</md-filled-button> <md-outlined-button type="button" onClick={() => navigate('search')}>Advanced Search</md-outlined-button>
                 </div>
             </form>
         </div>
