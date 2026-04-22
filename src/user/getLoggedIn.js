@@ -36,13 +36,13 @@ async function getLoggedIn(token, setLoggedIn, setToken, navigate) {
     } else {
 
         // check refresh_token expiry
-        let rt = new Date(token?.refreh_token_valid_until + '+00:00')
+        let rt = new Date(token?.refresh_token_valid_until + '+00:00')
         if (rt > d) {
             const refreshed_token = await refreshUser(token);
             if (refreshed_token?.status === 200) {
 
                 // recreate token dictionary
-                refreshed_token['refreh_token_valid_until'] = token.refreh_token_valid_until
+                refreshed_token['refresh_token_valid_until'] = token.refresh_token_valid_until
                 refreshed_token['refresh_token'] = token.refresh_token
 
                 // update local storage

@@ -105,7 +105,7 @@ export function ClientProvider({ children }) {
 
     if (!rememberMe) {
       delete tokenData.refresh_token;
-      delete tokenData.refreh_token_valid_until;
+      delete tokenData.refresh_token_valid_until;
     }
 
     setToken(tokenData);
@@ -175,11 +175,56 @@ export function ClientProvider({ children }) {
     return null;
   }
 
-  async function refreshSession() {
+  async function refreshSession(currentToken = token) {
     // if access token still valid, no need to refresh
     // if expired but refresh token is valid, ask backend for new access token
     // save the new token
     // if refresh fails, log out
+
+    if (!currentToken) {
+      setIsLoggedIn(false);
+      return null;
+    }
+
+    if (isTokenStillValid(currentToken)) {
+      return currentToken;
+    }
+
+    if (
+      !currentToken.refresh_token ||
+      !isRefreshTokenStillValid(currentToken)
+    ) {
+      await logout();
+      return null;
+    }
+
+    const response = await fetch(
+      process.env.REACT_APP_API + "user/login/refresh",
+      {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + currentToken.refresh_token,
+        },
+      },
+    );
+
+    const refreshed_token = await response.json();
+
+    if (refreshed_token?.status !== 200) {
+      await logout();
+      return null;
+    }
+
+    const nextToken = {
+      ...refreshed_token,
+      refresh_token: currentToken.refresh_token,
+      refresh_token_valid_until: currentToken.refresh_token_valid_until,
+    };
+
+    setToken(nextToken);
+    storeToken(nextToken);
+
+    return nextToken;
   }
 
   async function checkLoginStatus(currentToken = token) {
@@ -187,6 +232,44 @@ export function ClientProvider({ children }) {
     // maybe refresh if needed
     // call /user/is_logged_in
     // update isLoggedIn
+
+    let usableToken = currentToken;
+
+    if (!usableToken) {
+      setIsLoggedIn(false);
+      return false;
+    }
+
+    if (!isTokenStillValid(usableToken)) {
+      usableToken = await refreshSession(usableToken);
+    }
+
+    if (!usableToken?.access_token) {
+      setIsLoggedIn(false);
+      return false;
+    }
+
+    const response = await fetch(
+      process.env.REACT_APP_API + "user/is_logged_in",
+      {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + usableToken.access_token,
+        },
+      },
+    );
+
+    const data = await response.json();
+    const ok = data?.status === 200;
+
+    setIsLoggedIn(ok);
+
+    if (!ok) {
+      await logout();
+      return false;
+    }
+
+    return true;
   }
 
   async function clientFetch(path, options = {}) {
@@ -194,17 +277,55 @@ export function ClientProvider({ children }) {
     // attach Authorization header when token exists
     // call fetch with base API url + path
     // return response
+
+    let usableToken = token;
+
+    if (usableToken && !isTokenStillValid(usableToken)) {
+      usableToken = await refreshSession(usableToken);
+    }
+
+    const headers = {
+      ...(options.headers || {}),
+    };
+
+    if (usableToken?.access_token) {
+      headers.Authorization = "Bearer " + usableToken.access_token;
+    }
+
+    return fetch(process.env.REACT_APP_API + path, {
+      ...options,
+      headers,
+    });
   }
 
   async function loadOpenApi() {
     // fetch openapi.json
     // save in openApi state
+
+    const response = await fetch(process.env.REACT_APP_API + "openapi.json");
+    const data = await response.json();
+    setOpenApi(data);
+    return data;
   }
 
+  // TODO: for now only reads from the endpoint notifications/all, there is also notifications/unread and notifications/dismiss
   async function loadNotifications() {
     // only if user is logged in
     // fetch notifications endpoint
     // save to notifications state
+
+    if (!isLoggedIn) {
+      setNotifications([]);
+      return [];
+    }
+
+    const response = await clientFetch("notifications/all", {
+      method: "GET",
+    });
+
+    const data = await response.json();
+    setNotifications(Array.isArray(data) ? data : []);
+    return data;
   }
 
   useEffect(() => {
@@ -216,6 +337,26 @@ export function ClientProvider({ children }) {
       // maybe refresh token
       // maybe reload profile from server
       // finish loading
+
+      try {
+        setIsLoading(true);
+
+        await loadOpenApi();
+
+        const loggedIn = await checkLoginStatus(readStoredToken());
+
+        if (loggedIn) {
+          await loadProfile(readStoredToken());
+        } else {
+          setProfile(null);
+          storeProfile(null);
+          setNotifications([]);
+        }
+      } catch (error) {
+        console.error("Bootstrap failed:", error);
+      } finally {
+        setIsLoading(false);
+      }
     }
 
     bootstrap();
@@ -225,7 +366,28 @@ export function ClientProvider({ children }) {
     // optional polling:
     // every few minutes, check login status
     // maybe also fetch notifications
-  }, [token, isLoggedIn]);
+
+    if (!token) return;
+
+    let running = false;
+
+    const intervalId = setInterval(
+      async () => {
+        if (running) return;
+        running = true;
+
+        try {
+          const loggedIn = await checkLoginStatus();
+          if (loggedIn) await loadNotifications();
+        } finally {
+          running = false;
+        }
+      },
+      5 * 60 * 1000,
+    );
+
+    return () => clearInterval(intervalId);
+  }, [token]);
 
   const value = {
     token,
@@ -239,6 +401,8 @@ export function ClientProvider({ children }) {
     refreshSession,
     loadProfile,
     clientFetch,
+    checkLoginStatus,
+    loadNotifications,
   };
 
   return (
