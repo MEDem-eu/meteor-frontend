@@ -1,13 +1,19 @@
-import {Link} from "react-router-dom";
-import React, {useContext} from "react";
-import {UserContext} from "../user/UserContext";
-import {ProfileContext} from "../user/ProfileContext";
+// import {Link} from "react-router-dom";
+// import React, {useContext} from "react";
+// import {UserContext} from "../user/UserContext";
+// import {ProfileContext} from "../user/ProfileContext";
+
+import { Link } from "react-router-dom";
+import React from "react";
+import { useClient } from "../client/ClientProvider";
 
 const Nav = () => {
 
-    //const { token, setToken } = useToken();
-    const [token, setToken] = useContext(UserContext);
-    const [profile, setProfile] = useContext(ProfileContext);
+
+    // const [token, setToken] = useContext(UserContext);
+    // const [profile, setProfile] = useContext(ProfileContext);
+    const { token, profile } = useClient();
+
     let role = null
 
     if (profile) {

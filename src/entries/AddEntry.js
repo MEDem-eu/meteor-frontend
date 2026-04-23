@@ -1,7 +1,7 @@
 import {Link, useNavigate, useParams, useSearchParams} from "react-router-dom";
 import InfoIcon from '@mui/icons-material/Info';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
-import React, {useContext, useEffect, useState} from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {UserContext} from "../user/UserContext";
 import getLoggedIn from "../user/getLoggedIn";
 import AddAsyncSelectBox from "../forms/AddAsyncSelectBox";
@@ -9,7 +9,8 @@ import SearchTextField from "../forms/SearchTextField";
 import SearchSelectBox from "../forms/SearchSelectBox";
 import CreatableSelectBox from "../forms/CreatableSelectBox";
 import TypeDescription from '../components/TypeDescription';
-import { useOpenAPI } from "../components/APISpecs";
+// import { useOpenAPI } from "../components/APISpecs";
+import { useClient } from "../client/ClientProvider";
 import SearchCheckbox from "../forms/SearchCheckbox";
 import getProfile from "../user/getProfile";
 import {ProfileContext} from "../user/ProfileContext";
@@ -76,7 +77,8 @@ const AddEntry = () => {
     //let dockindUpdate = 'single'
     let { uid } = useParams();
     const [searchParams] = useSearchParams();
-    const openApi = useOpenAPI();
+    // const openApi = useOpenAPI();
+    const { openApi } = useClient();
 
     // API field names lookup (A1, B1, D1, E1, F1, T1)
     let apiField = {}
@@ -755,18 +757,30 @@ const AddEntry = () => {
     }
 
 
-    const fetchSchemaData = async () => {
-        try {
-            const data = await openApi.getData();
-            setSchema(data.components.schemas[entity]);
-        } catch (error) {
-            console.error('Error fetching API Schema data:', error);
-        } finally {
+    // const fetchSchemaData = async () => {
+    //     try {
+    //         const data = await openApi.getData();
+    //         setSchema(data.components.schemas[entity]);
+    //     } catch (error) {
+    //         console.error('Error fetching API Schema data:', error);
+    //     } finally {
+    //     }
+    // };
+    // if (entity && !schema){
+    //     fetchSchemaData()
+    // }
+    
+    useEffect(() => {
+        if (!entity || !openApi) {
+            return;
         }
-    };
-    if (entity && !schema){
-        fetchSchemaData()
-    }
+
+        setSchema(openApi.components.schemas[entity]);
+    }, [entity, openApi]);
+
+
+
+
 
     useEffect(() => {
         getData()
