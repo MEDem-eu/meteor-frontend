@@ -1,22 +1,17 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {UserContext} from "../user/UserContext";
-import {useNavigate, Link, useSearchParams} from "react-router-dom";
-import {ProfileContext} from "../user/ProfileContext";
-import getProfile from "../user/getProfile"
-import getLoggedIn from "../user/getLoggedIn"
-import DetailHeader from "../components/DetailHeader";
-import SearchForm from "../forms/SearchForm";
+import React, { useEffect, useState } from 'react';
+import {useNavigate, useSearchParams} from "react-router-dom";
 import ReviewFilterForm from "./ReviewFilterForm";
-import DataTable from 'datatables.net-dt';
+import DetailHeader from "../components/DetailHeader";
+
+import { useClient } from "../client/ClientProvider";
+
 
 const Review = () => {
 
-    const [token, setToken] = useContext(UserContext);
-    const [loggedIn, setLoggedIn] = useState();
     const navigate = useNavigate();
-    const [profile, setProfile] = useContext(ProfileContext);
     const [searchParams] = useSearchParams();
     const [items, setItems] = useState([]);
+    const { profile, isLoggedIn, isLoading, clientFetch } = useClient();
 
     var query = ''
     for (let param of searchParams) {
@@ -36,43 +31,42 @@ const Review = () => {
         }
     }
 
-    const fetchItemData = () => {
-        fetch(process.env.REACT_APP_API + "review" + query, {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Bearer ' + token?.access_token
-            }
-        })
-            .then(response => {
-                return response.json()
-            })
-            .then(data => {
-                data.sort((b, a) => a['_added_by']['_added_by|timestamp'].localeCompare(b['_added_by']['_added_by|timestamp']));
-                //console.log(data)
-                setItems(data);
-            })
-            .catch((err) => {
-                console.log(err);
+    const fetchItemData = async () => {
+        try {
+            const response = await clientFetch("review" + query, {
+                method: 'GET',
             });
-    }
 
-    const getData = () => {
-        getLoggedIn(token, setLoggedIn, setToken, navigate)
-        getProfile(setProfile)
-    }
+            const data = await response.json();
+
+            data.sort((b, a) =>
+                (a?._added_by?.['_added_by|timestamp'] || '').localeCompare(
+                    b?._added_by?.['_added_by|timestamp'] || ''
+                )
+            );
+
+            setItems(data);
+        } catch (err) {
+            console.log(err);
+        }
+    }    
+
 
     useEffect(() => {
-        getData()
-        fetchItemData()
-    }, [token])
+        if (isLoading || !isLoggedIn) {
+            return;
+        }
 
-    const retDateTime = (d) => {
-        let dt = new Date(d['_added_by|timestamp'])
-        dt = (dt.getDate()).toString().padStart(2, '0') + "-" + (dt.getMonth()+1).toString().padStart(2, '0') + "-" + dt.getFullYear() + " " + (dt.getHours()).toString().padStart(2, '0') + ":" + (dt.getMinutes()).toString().padStart(2, '0') + ":" + (dt.getSeconds()).toString().padStart(2, '0')
-        return dt
-    }
+        fetchItemData()
+    }, [isLoading, isLoggedIn, query])
+
+
 
     const retDate = (d) => {
+        if (!d?.['_added_by|timestamp']) {
+            return ''
+        }
+
         let dt = new Date(d['_added_by|timestamp'])
         dt = (dt.getDate()).toString().padStart(2, '0') + "-" + (dt.getMonth()+1).toString().padStart(2, '0') + "-" + dt.getFullYear()
         return dt
@@ -92,18 +86,6 @@ const Review = () => {
         return null;
     }
 
-    let displayCountries = (item) => {
-        let ret = ''
-        if (item.country) {
-            ret += item.country?.name
-        }
-        if (item.countries){
-            for (var c of item.countries){
-                ret += c.name + ' '
-            }
-        }
-        return ret
-    }
 
     /*
      {
@@ -124,7 +106,7 @@ const Review = () => {
     return (
         <>
             <div>
-                {profile &&
+                {isLoggedIn && profile &&
                     <>
                         <h3>Review</h3>
 
@@ -154,13 +136,13 @@ const Review = () => {
                                             <div className="divTableCell">
                                                 {item.country?.name}
                                                 {item.countries?.map(c => (
-                                                    <>
+                                                    <React.Fragment key={c.uid || c.name}>
                                                         {c.name}<br />
-                                                    </>
+                                                    </React.Fragment>
                                                 ))}
                                             </div>
                                             <div className="divTableCell">{retDate(item._added_by)}</div>
-                                            <div className="divTableCell">{item._added_by.display_name}</div>
+                                            <div className="divTableCell">{item._added_by?.display_name}</div>
                                             <div className="divTableCell"><md-filled-button type="button"
                                                                                             onClick={() => navigate('/detail/' + item._unique_name)}>Review
                                             </md-filled-button></div>

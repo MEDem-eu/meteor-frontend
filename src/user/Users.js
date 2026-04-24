@@ -1,22 +1,18 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import '@material/web/textfield/filled-text-field.js'
 import '@material/web/button/filled-button.js';
 import '@material/web/button/text-button.js';
-import {UserContext} from "./UserContext";
-import {useNavigate, Link, useSearchParams} from "react-router-dom";
-import {ProfileContext} from "./ProfileContext";
-import getProfile from "./getProfile"
-import getLoggedIn from "./getLoggedIn"
+import {useNavigate, useSearchParams} from "react-router-dom";
+import { useClient } from "../client/ClientProvider";
 
 const Users = () => {
 
-    const [token, setToken] = useContext(UserContext);
-    const [loggedIn, setLoggedIn] = useState();
     const navigate = useNavigate();
-    const [profile, setProfile] = useContext(ProfileContext);
     const [searchParams] = useSearchParams();
+    const { profile, isLoggedIn, isLoading, clientFetch } = useClient();
     let message = null
     const [userData, setUserData] = useState([]);
+
 
     for (let param of searchParams) {
         if (param[0] === 'msg') {
@@ -24,40 +20,36 @@ const Users = () => {
         }
     }
 
-    const fetchItemData = () => {
-        fetch(process.env.REACT_APP_API + "admin/users", {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Bearer ' + token?.access_token,
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(response => {
-            return response.json()
-        })
-        .then(data => {
-            if (data.status){
+    const fetchItemData = async () => {
+        try {
+            const response = await clientFetch("admin/users", {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const data = await response.json();
+
+            if (data.status) {
                 navigate('/profile?msg=' + data.message)
             } else {
                 setUserData(data);
-                //console.log(data)
             }
-
-        })
-        .catch((err) => {
+        } catch (err) {
             console.log(err);
-        });
+        }
     }
 
-    const getData = () => {
-        getLoggedIn(token, setLoggedIn, setToken, navigate)
-        getProfile(setProfile)
-    }
+
 
     useEffect(() => {
-        getData()
+        if (isLoading || !isLoggedIn) {
+            return;
+        }
+
         fetchItemData()
-    }, [token])
+    }, [isLoading, isLoggedIn])
 
     const retDateTime = (d) => {
         let dt = new Date(d)
@@ -65,14 +57,11 @@ const Users = () => {
         return dt
     }
 
-    const getUserLink = (uid) => {
-        return '/admin/users/' + uid
-    }
 
     return (
         <>
             <div>
-                {profile &&
+                {isLoggedIn && profile &&
                     <>
                         <h3>Users</h3>
 

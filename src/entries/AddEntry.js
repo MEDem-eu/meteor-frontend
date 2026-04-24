@@ -1,52 +1,19 @@
 import {Link, useNavigate, useParams, useSearchParams} from "react-router-dom";
 import InfoIcon from '@mui/icons-material/Info';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
-import React, { useContext, useEffect, useState } from "react";
-import {UserContext} from "../user/UserContext";
-import getLoggedIn from "../user/getLoggedIn";
+import React, { useEffect, useState } from "react";
 import AddAsyncSelectBox from "../forms/AddAsyncSelectBox";
 import SearchTextField from "../forms/SearchTextField";
 import SearchSelectBox from "../forms/SearchSelectBox";
 import CreatableSelectBox from "../forms/CreatableSelectBox";
 import TypeDescription from '../components/TypeDescription';
-// import { useOpenAPI } from "../components/APISpecs";
-import { useClient } from "../client/ClientProvider";
 import SearchCheckbox from "../forms/SearchCheckbox";
-import getProfile from "../user/getProfile";
-import {ProfileContext} from "../user/ProfileContext";
 import DatePickerValue from "./DatePickerValue"
 import Magic from "./Magic"
+import { useClient } from "../client/ClientProvider";
 
 
-async function addRecord(dgraph_type, json_entry, token) {
-    return fetch(process.env.REACT_APP_API + 'add/' + dgraph_type, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token?.access_token
-        },
-        body: JSON.stringify(json_entry)
-    })
-        .then(data => data.json())
 
-}
-
-async function editRecord(uid, json_entry, token) {
-    return fetch(process.env.REACT_APP_API + 'edit/' + uid, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token?.access_token
-        },
-        body: JSON.stringify(json_entry)
-    })
-        .then(data => data.json())
-        .catch((err) => {
-            //console.log('EDIT ERROR:');
-            console.log(err);
-        });
-
-}
 
 const AddEntry = () => {
 
@@ -77,8 +44,58 @@ const AddEntry = () => {
     //let dockindUpdate = 'single'
     let { uid } = useParams();
     const [searchParams] = useSearchParams();
-    // const openApi = useOpenAPI();
-    const { openApi } = useClient();
+
+    const {
+        openApi,
+        profile,
+        isLoggedIn,
+        isLoading,
+        clientFetch,
+        checkLoginStatus,
+    } = useClient();
+
+
+    async function addRecord(dgraph_type, json_entry) {
+        try {
+            const response = await clientFetch('add/' + dgraph_type, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(json_entry),
+            });
+
+            return response.json();
+        } catch (err) {
+            console.log(err);
+            return {
+                status: 'error',
+                message: 'Add request failed',
+            };
+        }
+    }
+
+    async function editRecord(uid, json_entry) {
+        try {
+            const response = await clientFetch('edit/' + uid, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(json_entry),
+            });
+
+            return response.json();
+        } catch (err) {
+            console.log(err);
+            return {
+                status: 'error',
+                message: 'Edit request failed',
+            };
+        }
+    }
+
+
 
     // API field names lookup (A1, B1, D1, E1, F1, T1)
     let apiField = {}
@@ -197,8 +214,7 @@ const AddEntry = () => {
         }
     }
 
-    const [token, setToken] = useContext(UserContext);
-    const [loggedIn, setLoggedIn] = useState();
+
     const navigate = useNavigate();
     const [entity, setEntity] = useState(initalEntity);
     const [entryName, setEntryName] = useState(initialEntryName);
@@ -206,7 +222,6 @@ const AddEntry = () => {
     const [error, setError] = useState(null);
     const [addResponse, setAddResponse] = useState(null);
     const [item, setItem] = useState(null);
-    const [profile, setProfile] = useContext(ProfileContext);
     const [schema, setSchema] = useState(null);
     const [doc, setDoc] = useState();
     const [dockind, setDockind] = useState();
@@ -474,26 +489,19 @@ const AddEntry = () => {
 
     // *************** Fetch Data ****************
 
-    const fetchItemData = () => {
-        let getItem = process.env.REACT_APP_API + "view/uid/" + uid
-
-        fetch(getItem, {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Bearer ' + token?.access_token
-            }
-        })
-            .then(response => {
-                return response.json()
-            })
-            .then(data => {
-                updateInitialJSON(data);
-                setItem(data);
-            })
-            .catch((err) => {
-                console.log(err);
+    const fetchItemData = async () => {
+        try {
+            const response = await clientFetch("view/uid/" + uid, {
+                method: 'GET',
             });
 
+            const data = await response.json();
+
+            updateInitialJSON(data);
+            setItem(data);
+        } catch (err) {
+            console.log(err);
+        }
     }
 
     //**************** magic dictionaries **************
@@ -751,10 +759,6 @@ const AddEntry = () => {
 
     // ************* Get Data when enter screen ***************
 
-    const getData = () => {
-        getLoggedIn(token, setLoggedIn, setToken, navigate)
-        getProfile(setProfile)
-    }
 
 
     // const fetchSchemaData = async () => {
@@ -783,13 +787,16 @@ const AddEntry = () => {
 
 
     useEffect(() => {
-        getData()
-        if (uid){
+        if (isLoading || !isLoggedIn) {
+            return;
+        }
+
+        if (uid) {
             fetchItemData()
         } else {
             updateInitialJSON(null)
         }
-    }, [token])
+    }, [isLoading, isLoggedIn, uid])
 
     // ************* Create select box details ***************** (A3)
 
@@ -1308,16 +1315,16 @@ const AddEntry = () => {
 
         if (1===1) {
             let resp = null
-            //let token2 = {"access_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTcxODI4NjQwMCwianRpIjoiZTgyYTMwYzgtODA1My00OGQ4LWE3MDgtNjJiYmU2YTIyNGYwIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjB4NjRkZWMxMSIsIm5iZiI6MTcxODI4NjQwMCwiY3NyZiI6IjFhMWI3OWEzLTNiMjgtNDUwOS04ZGIxLTFiM2Q0ZDUwM2E1OSIsImV4cCI6MTcxODI4NzMwMH0.FxVwqHbaZzAP-NaBoz9RJxslUpH-ji0FqYrzNHyXZK8","access_token_valid_until":"2024-06-13T14:01:40.870910","status":200,"refreh_token_valid_until":"2024-07-07T16:04:10.582213","refresh_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTcxNzc3NjI1MCwianRpIjoiNzA0MTU0NjktNmNkMy00MTAwLWJlOWUtMzQzMDQ4MTk5ZTUwIiwidHlwZSI6InJlZnJlc2giLCJzdWIiOiIweDY0ZGVjMTEiLCJuYmYiOjE3MTc3NzYyNTAsImNzcmYiOiI4OWNlYzRlNS04NjYwLTRkMzUtOGQ4My03ZDAwNjZkMTYyYzUiLCJleHAiOjE3MjAzNjgyNTB9.HPTvTXVo3YwF4Jaol76rs-TpVRK1FDFdcG8JK_j-OTQ"}
 
-            // Force the system into checking the token
-            // If the user has waited on the screen more than 15 minutes they will be logged out
-            // ... and the add/edit won't work
-            // So, run getLoggedIn again and update the token_checked variable
+            // Ensure the session is still valid before submitting.
+            // clientFetch will attach the current access token to add/edit requests.
 
-            // check token
-            let checked_token = await getLoggedIn(token, setLoggedIn, setToken, navigate)
-            //console.log('checked_token', checked_token)
+            const loggedIn = await checkLoginStatus();
+
+            if (!loggedIn) {
+                return;
+            }
+            
 
             if (uid) {
                 //edit
@@ -1325,8 +1332,7 @@ const AddEntry = () => {
                 //console.log(json)
                 resp = await editRecord(
                     uid,
-                    json,
-                    checked_token
+                    json
                 );
             } else {
                 //add
@@ -1334,19 +1340,18 @@ const AddEntry = () => {
                 //console.log(json)
                 resp = await addRecord(
                     entity,
-                    json,
-                    checked_token
+                    json
                 );
             }
             if (resp.status === 200) {
                 setAddResponse(resp);
                 setError(null)
-                navigate('/detail/' + resp.uid)
+                navigate('/detail/' + (resp._unique_name || resp.uid))
             } else {
                 if (resp.status === 'success') {
                     setAddResponse(resp);
                     setError(null)
-                    navigate('/detail/' + resp.uid)
+                    navigate('/detail/' + (resp._unique_name || resp.uid))
                 } else {
                     let msg = resp.message
                     if (!msg){
@@ -2448,7 +2453,7 @@ const AddEntry = () => {
 
     return (
         <>
-            {loggedIn && (
+            {isLoggedIn && (
                 <>
                     <h1>{uid ? 'Edit' : 'Add'} {entity}</h1>
                     <div className={'addrow'}>

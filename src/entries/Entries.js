@@ -1,61 +1,47 @@
-import {useNavigate, Link, useSearchParams} from "react-router-dom";
-import React, {useContext, useEffect, useState} from "react";
-import {UserContext} from "../user/UserContext";
-import getLoggedIn from "../user/getLoggedIn";
-import getProfile from "../user/getProfile";
-import {ProfileContext} from "../user/ProfileContext";
-import {PrimaryTab} from "@material/web/tabs/primary-tab";
+import { useNavigate, Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import {Tabs} from "@material/web/tabs/tabs";
+import {PrimaryTab} from "@material/web/tabs/primary-tab";
+import { useClient } from "../client/ClientProvider";
 
 const Entries = () => {
 
     const navigate = useNavigate();
-    const [token, setToken] = useContext(UserContext);
-    const [count, setCount] = useState('Loading')
-    const [loaded, setLoaded] = useState(false)
-    const [loggedIn, setLoggedIn] = useState();
-    const [profile, setProfile] = useContext(ProfileContext);
     const [showTab, setShowTab] = useState('1');
     const [entriesPending, setEntriesPending] = useState([]);
     const [entriesAccepted, setEntriesAccepted] = useState([]);
     const [entriesRejected, setEntriesRejected] = useState([]);
 
-    const getData = () => {
-        getLoggedIn(token, setLoggedIn, setToken, navigate)
-        getProfile(setProfile)
+    const { profile, isLoggedIn, isLoading, clientFetch } = useClient();
+    const [count, setCount] = useState('Loading')
+    const [entriesLoaded, setEntriesLoaded] = useState(false)
+
+
+    const fetchItemData = async () => {
+        try {
+            const response = await clientFetch("user/" + profile.uid + "/entries", {
+                method: 'GET',
+            });
+
+            const data = await response.json();
+
+            setCount(data?.length)
+            createEntryArrays(data)
+        } catch (err) {
+            console.log(err);
+        } finally {
+            setEntriesLoaded(true)
+        }
     }
 
-    const fetchItemData = () => {
-        // fetch types
-        fetch(process.env.REACT_APP_API + "user/" + profile.uid + "/entries", {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Bearer ' + token?.access_token
-            },
-        })
-            .then(response => {
-                return response.json()
-            })
-            .then(data => {
-                setCount(data?.length)
-                createEntryArrays(data)
-            })
-            .catch((err) => {
-                console.log(err);
-            })
-            .finally(() => {
-                setLoaded(true)
-            });
-    }
 
     useEffect(() => {
-        getData()
-    }, [token])
+        if (isLoading || !isLoggedIn || !profile?.uid || entriesLoaded) {
+            return;
+        }
 
-    if (loggedIn && profile.uid && !loaded){
-        //console.log(profile)
         fetchItemData()
-    }
+    }, [isLoading, isLoggedIn, profile?.uid, entriesLoaded])
 
     const getQuery = (un) => {
         return '/detail/' + un
@@ -143,7 +129,7 @@ const Entries = () => {
                 </md-primary-tab>
             </md-tabs>
 
-            {loaded && loggedIn && (
+            {entriesLoaded && isLoggedIn && (
                 <>
                     {showTab === '1' && (
                         <div role="tabpanel" id="panel-one" aria-labelledby="tab-one" className='tab_panel'>

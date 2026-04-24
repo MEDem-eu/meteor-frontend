@@ -1,49 +1,36 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useState } from 'react';
 import '@material/web/textfield/filled-text-field.js'
 import '@material/web/button/filled-button.js';
 import '@material/web/button/text-button.js';
-import '@material/web/button/text-button.js';
 import '@material/web/switch/switch.js';
-import {UserContext} from "./UserContext";
-import {useNavigate, Link, useParams} from "react-router-dom";
-import DetailHeader from "../components/DetailHeader";
-import {ProfileContext} from "./ProfileContext";
-import getLoggedIn from "./getLoggedIn"
-import getProfile from "./getProfile";
+import { useNavigate, useParams } from "react-router-dom";
 import SearchSelectBox from "../forms/SearchSelectBox";
+import { useClient } from "../client/ClientProvider";
 
 const UpdateUser = () => {
 
-    const [token, setToken] = useContext(UserContext);
-    const [loggedIn, setLoggedIn] = useState();
     const navigate = useNavigate();
-    const [profile, setProfile] = useContext(ProfileContext);
+    const { profile, isLoggedIn, clientFetch } = useClient();
     const [role, setRole] = useState();
     const [error, setError] = useState(null);
     const { uid } = useParams();
 
     async function updateUser() {
-        return fetch(process.env.REACT_APP_API + 'admin/users/' + uid + '?role=' + role, {
+        const response = await clientFetch('admin/users/' + uid + '?role=' + role, {
             method: 'GET',
-            headers: {
-                'Authorization': 'Bearer ' + token?.access_token,
-            }
-        })
-            .then(data => data.json())
+        });
 
+        return response.json();
     }
 
-    const getData = () => {
-        getLoggedIn(token, setLoggedIn, setToken, navigate)
-        getProfile(setProfile)
-    }
-
-    useEffect(() => {
-        getData()
-    }, [token])
 
     const handleSubmitUpdateUser = async e => {
         e.preventDefault();
+
+        if (!role) {
+            setError("Please select a role")
+            return;
+        }
 
         const ret = await updateUser();
         //console.log(ret)
@@ -75,7 +62,7 @@ const UpdateUser = () => {
     return (
         <>
             <div>
-                {profile &&
+                {isLoggedIn && profile &&
                     <form onSubmit={handleSubmitUpdateUser}>
                         <div className="divTable">
                             <h3>Update User {uid}</h3>
