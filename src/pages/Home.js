@@ -1,31 +1,17 @@
 import SearchForm from "../forms/SearchForm";
 import Login from "../user/Login";
 import SlickRecent from "../components/SlickRecent";
-// import React, {useContext, useEffect, useState} from "react";
-// import {UserContext} from "../user/UserContext"
 import { useNavigate, useSearchParams, Link } from "react-router-dom";
-// import getLoggedIn from "../user/getLoggedIn";
-// import {ProfileContext} from "../user/ProfileContext";
-// import getProfile from "../user/getProfile";
-
 import React, { useEffect } from "react";
 import { useClient } from "../client/ClientProvider";
 
 const Home = () => {
-  // const [token, setToken] = useContext(UserContext);
-  // const [loggedIn, setLoggedIn] = useState('Checking');
-  // const [profile, setProfile] = useContext(ProfileContext);
   const { token, profile, isLoggedIn } = useClient();
 
   const [searchParams] = useSearchParams();
   let logout = false;
 
   const navigate = useNavigate();
-
-  // const getData = () => {
-  //     getLoggedIn(token, setLoggedIn, setToken)
-  //     getProfile(setProfile)
-  // }
 
   const setSubmit = (but) => {
     return document.getElementById(but);
@@ -65,9 +51,6 @@ const Home = () => {
       <h1>Welcome to MEDem Meteor</h1>
 
       <div className="home-login">
-        {/* {!loggedIn &&
-                    <Login setToken={setToken} token={token} setProfile={setProfile} entry={'home'}/>
-                } */}
         {!isLoggedIn && <Login entry="home" />}
 
         {/* {loggedIn && (

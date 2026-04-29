@@ -3,24 +3,13 @@ import InfoIcon from "@mui/icons-material/Info";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import AddCheckForm from "./AddCheckForm";
 import React, { useContext, useEffect, useState } from "react";
-// import getLoggedIn from "../user/getLoggedIn";
-// import {UserContext} from "../user/UserContext";
+
 import { useClient } from "../client/ClientProvider";
 
 const Add = () => {
-  // const [token, setToken] = useContext(UserContext);
-  // const [loggedIn, setLoggedIn] = useState();
+
   const { isLoggedIn, isLoading } = useClient();
-
   const navigate = useNavigate();
-
-  // const getData = () => {
-  //     getLoggedIn(token, setLoggedIn, setToken, navigate)
-  // }
-
-  // useEffect(() => {
-  //     getData()
-  // }, [token])
 
   useEffect(() => {
     if (isLoading) {
@@ -34,7 +23,6 @@ const Add = () => {
 
   return (
     <>
-      {/* {loggedIn && ( */}
       {isLoggedIn && (
         <>
           <h1>Add New Entry</h1>

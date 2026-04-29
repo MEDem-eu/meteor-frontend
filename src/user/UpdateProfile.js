@@ -1,23 +1,14 @@
-// import React, {useContext, useEffect, useState} from 'react';
-// import {UserContext} from "./UserContext";
-// import DetailHeader from "../components/DetailHeader";
-// import {ProfileContext} from "./ProfileContext";
-// import getLoggedIn from "./getLoggedIn"
-
 import "@material/web/textfield/filled-text-field.js";
 import "@material/web/button/filled-button.js";
 import "@material/web/button/text-button.js";
 import "@material/web/button/text-button.js";
 import "@material/web/switch/switch.js";
 import { useNavigate, Link } from "react-router-dom";
-
 import React, { useEffect, useState } from "react";
 import { useClient } from "../client/ClientProvider";
 
 const UpdateProfile = () => {
-  // const [token, setToken] = useContext(UserContext);
-  // const [loggedIn, setLoggedIn] = useState();
-  // const [profile, setProfile] = useContext(ProfileContext);
+
   const { profile, isLoading, loadProfile, clientFetch } = useClient();
 
   const navigate = useNavigate();
@@ -26,19 +17,6 @@ const UpdateProfile = () => {
   const [orcid, setOrcid] = useState();
   const [preferenceEmails, setPreferenceEmails] = useState();
   const [error, setError] = useState(null);
-
-  // async function updateUser(update) {
-  //     return fetch(process.env.REACT_APP_API + 'user/profile/update', {
-  //         method: 'POST',
-  //         headers: {
-  //             'Authorization': 'Bearer ' + token?.access_token,
-  //             'Content-Type': 'application/json'
-  //         },
-  //         body: JSON.stringify(update)
-  //     })
-  //         .then(data => data.json())
-
-  // }
 
   async function updateUser(update) {
     const response = await clientFetch("user/profile/update", {
@@ -51,32 +29,6 @@ const UpdateProfile = () => {
 
     return response.json();
   }
-
-  //   const getData = () => {
-  //       getLoggedIn(token, setLoggedIn, setToken, navigate)
-  //       return fetch(process.env.REACT_APP_API + 'user/profile', {
-  //           method: 'GET',
-  //           headers: {
-  //               'Authorization': 'Bearer ' + token?.access_token
-  //           },
-  //       }).then(response => response.json())
-  //           .then(data => {
-  //               console.log(data)
-  //               if (data._account_status === 'active'){
-  //                   setProfile(data)
-  //                   setDisplayName(data.display_name)
-  //                   setAffiliation(data.affiliation)
-  //                   setOrcid(data.orcid)
-  //                   setPreferenceEmails(data.preference_emails)
-  //               } else {
-  //                   navigate("/logout")
-  //               }
-  //           });
-  //   }
-
-  //   useEffect(() => {
-  //       getData()
-  //   }, [token])
 
   useEffect(() => {
     if (isLoading) {

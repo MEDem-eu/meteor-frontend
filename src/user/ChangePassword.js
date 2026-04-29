@@ -5,33 +5,17 @@ import "@material/web/textfield/outlined-text-field.js";
 import "@material/web/button/filled-button.js";
 import "@material/web/checkbox/checkbox.js";
 import "@material/web/button/text-button.js";
-// import {UserContext} from "./UserContext";
-// import getLoggedIn from "./getLoggedIn";
-// import getProfile from "./getProfile";
-// import {ProfileContext} from "./ProfileContext";
 import { useClient } from "../client/ClientProvider";
 
 const ChangePassword = () => {
-  // const [token, setToken] = useContext(UserContext);
-  // const [loggedIn, setLoggedIn] = useState();
-  // const [profile, setProfile] = useContext(ProfileContext);
+  
   const { profile, isLoading, clientFetch } = useClient();
-
   const navigate = useNavigate();
   const [error, setError] = useState(null);
-
   const [old_pw, setOldPassword] = useState();
   const [new_pw, setNewPassword] = useState();
   const [confirm_new, setConfirmPassword] = useState();
 
-  // const getData = () => {
-  //     getLoggedIn(token, setLoggedIn, setToken, navigate)
-  //     getProfile(setProfile)
-  // }
-
-  // useEffect(() => {
-  //     getData()
-  // }, [])
 
   useEffect(() => {
     if (isLoading) {
@@ -42,18 +26,6 @@ const ChangePassword = () => {
       navigate("/logout");
     }
   }, [profile, isLoading, navigate]);
-
-  //   async function resetPwd(credentials) {
-  //     console.log(token);
-  //     return fetch(process.env.REACT_APP_API + "user/password/change", {
-  //       method: "POST",
-  //       headers: {
-  //         Authorization: "Bearer " + token?.access_token,
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify(credentials),
-  //     }).then((data) => data.json());
-  //   }
 
   async function resetPwd(credentials) {
     const response = await clientFetch("user/password/change", {

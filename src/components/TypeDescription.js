@@ -1,7 +1,3 @@
-// import React, { useState, useEffect } from "react";
-// import { useOpenAPI } from "./APISpecs";
-
-
 import React from "react";
 import { useClient } from "../client/ClientProvider";
 
@@ -24,32 +20,6 @@ const TypeDescription = ({ dgraphType, fieldName }) => {
     if (!openApi) {
         return "Loading...";
     }
-
-
-
-    // const openApi = useOpenAPI();
-    // const [loading, setLoading] = useState(true);
-    // const [schema, setSchema] = useState(null);
-  
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         try {
-    //             const data = await openApi.getData();
-    //             setSchema(data.components.schemas[dgraphType]);
-    //         } catch (error) {
-    //             console.error('Error fetching data:', error);
-    //         } finally {
-    //             setLoading(false);
-    //         }
-    //     };
-
-    //     fetchData();
-
-    // }, [dgraphType, openApi]);
-  
-    // if (loading) {
-    //   return "Loading...";
-    // }
 
     function capitalizeFirstLetter(string) {
         let str = string.charAt(0).toUpperCase() + string.slice(1);

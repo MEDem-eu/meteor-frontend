@@ -1,25 +1,15 @@
 import { useNavigate, Link, useSearchParams } from "react-router-dom";
-// import InfoIcon from '@mui/icons-material/Info';
-// import MenuBookIcon from '@mui/icons-material/MenuBook';
-// import React, {useContext, useEffect, useState} from "react";
-// import {UserContext} from "../user/UserContext";
-// import getLoggedIn from "../user/getLoggedIn";
 import React, { useEffect, useState } from "react";
 import { useClient } from "../client/ClientProvider";
 
 const AddCheck = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  // const [token, setToken] = useContext(UserContext);
-  // const [duplicates, setDuplicates] = useState("");
   const [duplicates, setDuplicates] = useState([]);
   const [count, setCount] = useState("Loading");
-  // const [loggedIn, setLoggedIn] = useState();
   const { token, isLoggedIn, isLoading, clientFetch } = useClient();
 
-//   const getData = () => {
-//     getLoggedIn(token, setLoggedIn, setToken, navigate);
-//   };
+
 
   //get querystring
   let entity = "";
@@ -35,29 +25,6 @@ const AddCheck = () => {
     }
   }
 
-  // const fetchItemData = () => {
-  //     // fetch types
-  //     fetch(process.env.REACT_APP_API + "add/check?name=" + entryName + "&dgraph_type=" + entity, {
-  //         method: 'GET',
-  //         headers: {
-  //             'Authorization': 'Bearer ' + token?.access_token
-  //         },
-  //     })
-  //         .then(response => {
-  //             return response.json()
-  //         })
-  //         .then(data => {
-  //             if (data.length > 0) {
-  //                 setCount(data.length)
-  //                 setDuplicates(data);
-  //             } else {
-  //                 navigate('/add/entry?name=' + entryName + '&dgraph_type=' + entity)
-  //             }
-  //         })
-  //         .catch((err) => {
-  //             console.log(err);
-  //         });
-  // }
 
   const fetchItemData = async () => {
     try {
@@ -80,11 +47,6 @@ const AddCheck = () => {
       console.log(err);
     }
   };
-
-  //   useEffect(() => {
-  //     fetchItemData();
-  //     getData();
-  //   }, [token]);
 
   useEffect(() => {
     if (isLoading) {
@@ -119,7 +81,6 @@ const AddCheck = () => {
 
   return (
     <>
-      {/* {duplicates.length > 0 && loggedIn && ( */}
       {duplicates.length > 0 && isLoggedIn && (
         <>
           <h1>Add New Entry</h1>

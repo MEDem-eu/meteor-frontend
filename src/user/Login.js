@@ -1,30 +1,12 @@
 import React, { useEffect, useState } from "react";
-// import PropTypes from "prop-types";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import "@material/web/textfield/filled-text-field.js";
 import "@material/web/textfield/outlined-text-field.js";
 import "@material/web/button/filled-button.js";
 import "@material/web/checkbox/checkbox.js";
 import "@material/web/button/text-button.js";
-// import loginProfile from "./loginProfile";
 import { useClient } from "../client/ClientProvider";
 
-// async function loginUser(credentials) {
-//   return fetch(process.env.REACT_APP_API + "user/login/token", {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify(credentials),
-//   }).then((data) => data.json());
-// }
-
-// export default function Login({
-//   setToken,
-//   token,
-//   setProfile,
-//   entry = "login",
-// }) {
 
 export default function Login({ entry = "login" }) {
   const { login } = useClient();
@@ -80,28 +62,6 @@ export default function Login({ entry = "login" }) {
     }
   };
 
-
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   const token = await loginUser({
-  //     email,
-  //     password,
-  //   });
-  //   if (token.status === 200) {
-  //     if (!rememberMe) {
-  //       delete token.refresh_token_valid_until;
-  //       delete token.refresh_token;
-  //     }
-  //     setToken(token);
-  //     setError(null);
-  //     await loginProfile(token, setProfile);
-  //     navigate("/profile");
-  //   } else {
-  //     setError(token.message);
-  //   }
-  // };
-
   const changeEmail = (e) => {
     console.log("email changed", e);
     setEmail(e.target.value);
@@ -133,16 +93,6 @@ export default function Login({ entry = "login" }) {
       )}
       <form onSubmit={handleSubmit}>
         <div className="login-register">
-          {/*
-                    <md-filled-text-field
-                        name="username"
-                        label="Email"
-                        type="email"
-                        autoComplete='on'
-                        onBlur={e => setEmail(e.target.value)}
-                        required
-                    />
-                    */}
           <strong>Email:</strong>
           <br />
           <input
@@ -154,16 +104,6 @@ export default function Login({ entry = "login" }) {
         </div>
 
         <div className="login-register">
-          {/*
-                    <md-filled-text-field
-                        name="password"
-                        label="Password"
-                        type="password"
-                        onBlur={e => setPassword(e.target.value)}
-                        autoComplete='on'
-                        required
-                    />
-                    */}
           <strong>Password:</strong>
           <br />
           <input
@@ -229,6 +169,3 @@ export default function Login({ entry = "login" }) {
   );
 }
 
-// Login.propTypes = {
-//   setToken: PropTypes.func.isRequired,
-// };

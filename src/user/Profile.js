@@ -1,25 +1,15 @@
-// import React, {useContext, useEffect, useState} from 'react';
 import React from "react";
-
 import "@material/web/textfield/filled-text-field.js";
 import "@material/web/button/filled-button.js";
 import "@material/web/button/text-button.js";
-// import {UserContext} from "./UserContext";
 import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import DetailField from "../components/DetailField";
-// import DetailHeader from "../components/DetailHeader";
-// import {ProfileContext} from "./ProfileContext";
-// import getProfile from "./getProfile"
-// import getLoggedIn from "./getLoggedIn"
 import DetailExtLink from "../components/DetailExtLink";
 import "@material/web/dialog/dialog.js";
 
 import { useClient } from "../client/ClientProvider";
 
 const Profile = () => {
-  // const [token, setToken] = useContext(UserContext);
-  // const [loggedIn, setLoggedIn] = useState();
-  // const [profile, setProfile] = useContext(ProfileContext);
   const { profile, clientFetch } = useClient();
 
   const navigate = useNavigate();
@@ -31,26 +21,6 @@ const Profile = () => {
       message = param[1];
     }
   }
-
-  // const getData = () => {
-  //     getLoggedIn(token, setLoggedIn, setToken, navigate)
-  //     getProfile(setProfile)
-  // }
-
-  // useEffect(() => {
-  //     getData()
-  // }, [])
-
-  // async function deleteAccount() {
-  //     return fetch(process.env.REACT_APP_API + 'user/profile/delete', {
-  //         method: 'POST',
-  //         headers: {
-  //             'Authorization': 'Bearer ' + token?.access_token,
-  //         }
-  //     })
-  //         .then(data => data.json())
-
-  // }
 
   async function deleteAccount() {
     const response = await clientFetch("user/profile/delete", {
