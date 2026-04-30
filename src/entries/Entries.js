@@ -12,16 +12,14 @@ const Entries = () => {
     const [entriesAccepted, setEntriesAccepted] = useState([]);
     const [entriesRejected, setEntriesRejected] = useState([]);
 
-    const { profile, isLoggedIn, isLoading, clientFetch } = useClient();
+    const { profile, isLoggedIn, isLoading, clientFetchGet } = useClient();
     const [count, setCount] = useState('Loading')
     const [entriesLoaded, setEntriesLoaded] = useState(false)
 
 
     const fetchItemData = async () => {
         try {
-            const response = await clientFetch("user/" + profile.uid + "/entries", {
-                method: 'GET',
-            });
+            const response = await clientFetchGet("user/" + profile.uid + "/entries");
 
             const data = await response.json();
 

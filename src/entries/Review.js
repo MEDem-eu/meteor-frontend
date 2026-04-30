@@ -11,7 +11,7 @@ const Review = () => {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const [items, setItems] = useState([]);
-    const { profile, isLoggedIn, isLoading, clientFetch } = useClient();
+    const { profile, isLoggedIn, isLoading, clientFetchGet } = useClient();
 
     var query = ''
     for (let param of searchParams) {
@@ -33,9 +33,7 @@ const Review = () => {
 
     const fetchItemData = async () => {
         try {
-            const response = await clientFetch("review" + query, {
-                method: 'GET',
-            });
+            const response = await clientFetchGet("review" + query);
 
             const data = await response.json();
 

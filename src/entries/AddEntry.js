@@ -50,20 +50,15 @@ const AddEntry = () => {
         profile,
         isLoggedIn,
         isLoading,
-        clientFetch,
+        clientFetchGet,
+        clientFetchPost,
         checkLoginStatus,
     } = useClient();
 
 
     async function addRecord(dgraph_type, json_entry) {
         try {
-            const response = await clientFetch('add/' + dgraph_type, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(json_entry),
-            });
+            const response = await clientFetchPost('add/' + dgraph_type, json_entry);
 
             return response.json();
         } catch (err) {
@@ -77,13 +72,7 @@ const AddEntry = () => {
 
     async function editRecord(uid, json_entry) {
         try {
-            const response = await clientFetch('edit/' + uid, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(json_entry),
-            });
+            const response = await clientFetchPost('edit/' + uid, json_entry);
 
             return response.json();
         } catch (err) {
@@ -491,9 +480,7 @@ const AddEntry = () => {
 
     const fetchItemData = async () => {
         try {
-            const response = await clientFetch("view/uid/" + uid, {
-                method: 'GET',
-            });
+            const response = await clientFetchGet("view/uid/" + uid);
 
             const data = await response.json();
 

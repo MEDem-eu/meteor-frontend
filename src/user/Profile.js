@@ -10,7 +10,7 @@ import "@material/web/dialog/dialog.js";
 import { useClient } from "../client/ClientProvider";
 
 const Profile = () => {
-  const { profile, clientFetch, logout } = useClient();
+  const { profile, clientFetchPost, logout } = useClient();
 
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -23,9 +23,7 @@ const Profile = () => {
   }
 
   async function deleteAccount() {
-    const response = await clientFetch("user/profile/delete", {
-      method: "POST",
-    });
+    const response = await clientFetchPost("user/profile/delete");
 
     return response.json();
   }

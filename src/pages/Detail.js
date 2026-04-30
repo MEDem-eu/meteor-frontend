@@ -34,7 +34,7 @@ const Detail = () => {
   const [reverse, setReverse] = useState([]);
   const navigate = useNavigate();
   const [submitError, setSubmitError] = useState(null);
-  const { token, profile, clientFetch, isLoading, logout } = useClient();
+  const { profile, clientFetchGet, clientFetchPost, isLoading, logout } = useClient();
 
   const types_similar = [
     "Dataset",
@@ -45,30 +45,20 @@ const Detail = () => {
     "LearningMaterial",
   ];
 
-  const tkn = {
-    method: "GET",
-  };
-
   async function submitReview(json_review) {
-    const response = await clientFetch("review/submit", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(json_review),
-    });
+    const response = await clientFetchPost("review/submit", json_review);
 
     return response.json();
   }
 
   const fetchItemData = () => {
-    clientFetch("view/entry/" + uid, tkn)
+    clientFetchGet("view/entry/" + uid)
       .then((response) => {
         return response.json();
       })
       .then((data) => {
         if (data.status) {
-          clientFetch("view/uid/" + uid, tkn)
+          clientFetchGet("view/uid/" + uid)
             .then((response2) => {
               return response2.json();
             })
@@ -77,7 +67,7 @@ const Detail = () => {
               console.log("data2.uid", data2.uid);
               setItem(data2);
               if (getDgraph(data2) !== "Collection") {
-                clientFetch("view/reverse/" + data2.uid, tkn)
+                clientFetchGet("view/reverse/" + data2.uid)
                   .then((response3) => {
                     return response3.json();
                   })
@@ -90,9 +80,7 @@ const Detail = () => {
         } else {
           setItem(data);
           if (getDgraph(data) !== "Collection") {
-            clientFetch("view/reverse/" + data.uid, {
-              method: "GET",
-            })
+            clientFetchGet("view/reverse/" + data.uid)
               .then((response1) => {
                 return response1.json();
               })
@@ -116,7 +104,7 @@ const Detail = () => {
 
     fetchItemData();
     document.documentElement.scrollTo(0, 0);
-  }, [uid, token, isLoading]);
+  }, [uid, isLoading]);
 
   const reviewEntry = async (accept_or_reject) => {
     if (accept_or_reject !== "cancel") {

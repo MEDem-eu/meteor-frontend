@@ -10,15 +10,13 @@ import { useClient } from "../client/ClientProvider";
 const UpdateUser = () => {
 
     const navigate = useNavigate();
-    const { profile, isLoggedIn, clientFetch } = useClient();
+    const { profile, isLoggedIn, clientFetchGet } = useClient();
     const [role, setRole] = useState();
     const [error, setError] = useState(null);
     const { uid } = useParams();
 
     async function updateUser() {
-        const response = await clientFetch('admin/users/' + uid + '?role=' + role, {
-            method: 'GET',
-        });
+        const response = await clientFetchGet('admin/users/' + uid + '?role=' + role);
 
         return response.json();
     }

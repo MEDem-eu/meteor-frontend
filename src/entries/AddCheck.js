@@ -7,7 +7,7 @@ const AddCheck = () => {
   const [searchParams] = useSearchParams();
   const [duplicates, setDuplicates] = useState([]);
   const [count, setCount] = useState("Loading");
-  const { token, isLoggedIn, isLoading, clientFetch, logout } = useClient();
+  const { token, isLoggedIn, isLoading, clientFetchGet, logout } = useClient();
 
 
 
@@ -28,12 +28,8 @@ const AddCheck = () => {
 
   const fetchItemData = async () => {
     try {
-      const response = await clientFetch(
-        "add/check?name=" + entryName + "&dgraph_type=" + entity,
-        {
-          method: "GET",
-        },
-      );
+      const response = await clientFetchGet(
+        "add/check?name=" + entryName + "&dgraph_type=" + entity);
 
       const data = await response.json();
 

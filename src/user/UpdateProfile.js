@@ -9,7 +9,7 @@ import { useClient } from "../client/ClientProvider";
 
 const UpdateProfile = () => {
 
-  const { profile, isLoading, loadProfile, clientFetch, logout } = useClient();
+  const { profile, isLoading, loadProfile, clientFetchPost, logout } = useClient();
 
   const navigate = useNavigate();
   const [displayName, setDisplayName] = useState();
@@ -19,13 +19,7 @@ const UpdateProfile = () => {
   const [error, setError] = useState(null);
 
   async function updateUser(update) {
-    const response = await clientFetch("user/profile/update", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(update),
-    });
+    const response = await clientFetchPost("user/profile/update", update);
 
     return response.json();
   }

@@ -9,7 +9,7 @@ import { useClient } from "../client/ClientProvider";
 
 const ChangePassword = () => {
   
-  const { profile, isLoading, clientFetch, logout } = useClient();
+  const { profile, isLoading, clientFetchPost, logout } = useClient();
   const navigate = useNavigate();
   const [error, setError] = useState(null);
   const [old_pw, setOldPassword] = useState();
@@ -28,13 +28,7 @@ const ChangePassword = () => {
   }, [profile, isLoading, navigate]);
 
   async function resetPwd(credentials) {
-    const response = await clientFetch("user/password/change", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(credentials),
-    });
+    const response = await clientFetchPost("user/password/change", credentials);
 
     return response.json();
   }

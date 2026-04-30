@@ -8,14 +8,12 @@ const Rejected = () => {
 
     let { uid } = useParams();
     const [item, setItem] = useState()
-    const { isLoggedIn, isLoading, clientFetch } = useClient();
+    const { isLoggedIn, isLoading, clientFetchGet } = useClient();
 
 
     const fetchItemData = async () => {
         try {
-            const response = await clientFetch("view/rejected/" + uid, {
-                method: 'GET',
-            });
+            const response = await clientFetchGet("view/rejected/" + uid);
 
             const data = await response.json();
 

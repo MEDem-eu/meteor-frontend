@@ -9,7 +9,7 @@ const Users = () => {
 
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
-    const { profile, isLoggedIn, isLoading, clientFetch } = useClient();
+    const { profile, isLoggedIn, isLoading, clientFetchGet } = useClient();
     let message = null
     const [userData, setUserData] = useState([]);
 
@@ -22,12 +22,7 @@ const Users = () => {
 
     const fetchItemData = async () => {
         try {
-            const response = await clientFetch("admin/users", {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
+            const response = await clientFetchGet("admin/users");
 
             const data = await response.json();
 

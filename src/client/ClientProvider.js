@@ -77,7 +77,7 @@ export function ClientProvider({ children }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [notifications, setNotifications] = useState([]);
-  const [logoutReason, setLogoutReason] = useState(null)
+  const [logoutReason, setLogoutReason] = useState(null);
 
   async function login(email, password, rememberMe) {
     // call login endpoint
@@ -302,6 +302,30 @@ export function ClientProvider({ children }) {
     });
   }
 
+  async function clientFetchGet(path, options = {}) {
+    return clientFetch(path, {
+      ...options,
+      method: "GET",
+    });
+  }
+
+  async function clientFetchPost(path, body = null, options = {}) {
+    const request = {
+      ...options,
+      method: "POST",
+      headers: {
+        ...(body !== null ? { "Content-Type": "application/json" } : {}),
+        ...(options.headers || {}),
+      },
+    };
+
+    if (body !== null) {
+      request.body = JSON.stringify(body);
+    }
+
+    return clientFetch(path, request);
+  }
+
   async function loadOpenApi() {
     // fetch openapi.json
     // save in openApi state
@@ -406,6 +430,8 @@ export function ClientProvider({ children }) {
     refreshSession,
     loadProfile,
     clientFetch,
+    clientFetchGet,
+    clientFetchPost,
     checkLoginStatus,
     loadNotifications,
     setLogoutReason,
