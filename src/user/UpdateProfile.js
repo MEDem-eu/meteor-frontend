@@ -9,7 +9,7 @@ import { useClient } from "../client/ClientProvider";
 
 const UpdateProfile = () => {
 
-  const { profile, isLoading, loadProfile, clientFetch } = useClient();
+  const { profile, isLoading, loadProfile, clientFetch, logout } = useClient();
 
   const navigate = useNavigate();
   const [displayName, setDisplayName] = useState();
@@ -36,7 +36,7 @@ const UpdateProfile = () => {
     }
 
     if (!profile) {
-      navigate("/logout");
+      logout("expired");;
       return;
     }
 

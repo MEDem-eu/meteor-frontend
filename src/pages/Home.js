@@ -1,17 +1,21 @@
 import SearchForm from "../forms/SearchForm";
 import Login from "../user/Login";
 import SlickRecent from "../components/SlickRecent";
-import { useNavigate, useSearchParams, Link } from "react-router-dom";
+import { useSearchParams, Link } from "react-router-dom";
 import React, { useEffect } from "react";
 import { useClient } from "../client/ClientProvider";
 
 const Home = () => {
-  const { token, profile, isLoggedIn } = useClient();
+  const { profile, isLoggedIn, logout } = useClient();
 
   const [searchParams] = useSearchParams();
-  let logout = false;
-
-  const navigate = useNavigate();
+  const logoutMessage = searchParams.get("logout")
+    ? "logout"
+    : searchParams.get("expired")
+      ? "expired"
+      : searchParams.get("accountDeleted")
+        ? "accountDeleted"
+        : null;
 
   const setSubmit = (but) => {
     return document.getElementById(but);
@@ -39,12 +43,6 @@ const Home = () => {
       document.removeEventListener("keydown", listener);
     };
   }, []);
-
-  for (let param of searchParams) {
-    if (param[0] === "logout" && param[1] === "true") {
-      logout = true;
-    }
-  }
 
   return (
     <>
@@ -76,7 +74,7 @@ const Home = () => {
                 >
                   <md-text-button
                     type="button"
-                    onClick={() => navigate("/logout/")}
+                    onClick={() => logout("logout")}
                   >
                     Logout
                   </md-text-button>
@@ -88,7 +86,7 @@ const Home = () => {
       </div>
 
       <div className="home-text">
-        {logout && (
+        {logoutMessage && (
           <>
             <div
               style={{
@@ -98,10 +96,20 @@ const Home = () => {
                 marginBottom: "10px",
               }}
             >
-              <span className="message">You are logged out!</span>
-              <br />
-              <strong>Hint:</strong> Try ticking the 'Remember Me' box when
-              logging in to stay logged in for longer!
+              <span className="message">
+                {logoutMessage === "expired"
+                  ? "Your session expired. Please log in again."
+                  : logoutMessage === "accountDeleted"
+                    ? "Your account was deleted."
+                    : "You are logged out!"}
+              </span>
+              {logoutMessage === "expired" && (
+                <>
+                  <br />
+                  <strong>Hint:</strong> Try ticking the 'Remember Me' box when
+                  logging in to stay logged in for longer!
+                </>
+              )}
             </div>
           </>
         )}

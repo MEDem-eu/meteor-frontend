@@ -10,7 +10,7 @@ import "@material/web/dialog/dialog.js";
 import { useClient } from "../client/ClientProvider";
 
 const Profile = () => {
-  const { profile, clientFetch } = useClient();
+  const { profile, clientFetch, logout } = useClient();
 
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -40,7 +40,7 @@ const Profile = () => {
       // delete account
       const ret = await deleteAccount();
       console.log(ret);
-      navigate("/logout");
+      logout("accountDeleted");;
     });
 
     c.addEventListener("click", async () => {

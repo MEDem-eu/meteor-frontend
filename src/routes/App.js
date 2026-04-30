@@ -16,7 +16,6 @@ import NotImplemented from "../pages/NotImplemented";
 import Search from "../search/Search";
 import SearchLink from "../search/SearchLink";
 import LoginPage from "../pages/LoginPage";
-import Logout from "../user/Logout";
 import Profile from "../user/Profile";
 import UpdateProfile from "../user/UpdateProfile";
 import RequestPasswordReset from "../user/RequestPasswordReset";
@@ -35,11 +34,13 @@ import Rejected from "../entries/Rejected";
 import Review from "../entries/Review";
 import ReviewLink from "../entries/ReviewLink";
 import { ClientProvider } from "../client/ClientProvider";
+import LogoutRedirectHandler from "../client/LogoutRedirectHandler";
 
 const App = () => {
   return (
     <ClientProvider>
       <BrowserRouter>
+        <LogoutRedirectHandler />
         <Routes>
           {/* Main layout route - included in every page */}
           <Route path="/" element={<Layout />}>
@@ -66,7 +67,7 @@ const App = () => {
               path="register/resend"
               element={<ResendVerificationEmail />}
             />
-            <Route path="logout" element={<Logout />} />
+
             <Route path="profile" element={<Profile />} />
             <Route path="profile/update" element={<UpdateProfile />} />
             <Route path="password/reset" element={<RequestPasswordReset />} />

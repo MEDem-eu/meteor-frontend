@@ -7,7 +7,7 @@ const AddCheck = () => {
   const [searchParams] = useSearchParams();
   const [duplicates, setDuplicates] = useState([]);
   const [count, setCount] = useState("Loading");
-  const { token, isLoggedIn, isLoading, clientFetch } = useClient();
+  const { token, isLoggedIn, isLoading, clientFetch, logout } = useClient();
 
 
 
@@ -54,7 +54,7 @@ const AddCheck = () => {
     }
 
     if (!isLoggedIn) {
-      navigate("/logout");
+      logout("expired");;
       return;
     }
 

@@ -9,7 +9,7 @@ import { useClient } from "../client/ClientProvider";
 
 const ChangePassword = () => {
   
-  const { profile, isLoading, clientFetch } = useClient();
+  const { profile, isLoading, clientFetch, logout } = useClient();
   const navigate = useNavigate();
   const [error, setError] = useState(null);
   const [old_pw, setOldPassword] = useState();
@@ -23,7 +23,7 @@ const ChangePassword = () => {
     }
 
     if (!profile) {
-      navigate("/logout");
+      logout("expired");
     }
   }, [profile, isLoading, navigate]);
 

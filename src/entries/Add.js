@@ -8,7 +8,7 @@ import { useClient } from "../client/ClientProvider";
 
 const Add = () => {
 
-  const { isLoggedIn, isLoading } = useClient();
+  const { isLoggedIn, isLoading, logout } = useClient();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -17,7 +17,7 @@ const Add = () => {
     }
 
     if (!isLoggedIn) {
-      navigate("/logout");
+      logout("expired");;
     }
   }, [isLoggedIn, isLoading, navigate]);
 

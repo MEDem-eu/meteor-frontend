@@ -77,6 +77,7 @@ export function ClientProvider({ children }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [notifications, setNotifications] = useState([]);
+  const [logoutReason, setLogoutReason] = useState(null)
 
   async function login(email, password, rememberMe) {
     // call login endpoint
@@ -121,7 +122,7 @@ export function ClientProvider({ children }) {
     };
   }
 
-  async function logout() {
+  async function logout(reason = null) {
     // optionally call backend logout endpoint
     // clear token and profile from state
     // clear localStorage entries
@@ -146,6 +147,9 @@ export function ClientProvider({ children }) {
 
     storeToken(null);
     storeProfile(null);
+    if (reason) {
+      setLogoutReason(reason);
+    }
   }
 
   async function loadProfile(currentToken = token) {
@@ -194,7 +198,7 @@ export function ClientProvider({ children }) {
       !currentToken.refresh_token ||
       !isRefreshTokenStillValid(currentToken)
     ) {
-      await logout();
+      await logout("expired");
       return null;
     }
 
@@ -211,7 +215,7 @@ export function ClientProvider({ children }) {
     const refreshed_token = await response.json();
 
     if (refreshed_token?.status !== 200) {
-      await logout();
+      await logout("expired");
       return null;
     }
 
@@ -265,7 +269,7 @@ export function ClientProvider({ children }) {
     setIsLoggedIn(ok);
 
     if (!ok) {
-      await logout();
+      await logout("expired");
       return false;
     }
 
@@ -396,6 +400,7 @@ export function ClientProvider({ children }) {
     isLoggedIn,
     isLoading,
     notifications,
+    logoutReason,
     login,
     logout,
     refreshSession,
@@ -403,6 +408,7 @@ export function ClientProvider({ children }) {
     clientFetch,
     checkLoginStatus,
     loadNotifications,
+    setLogoutReason,
   };
 
   return (

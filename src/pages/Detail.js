@@ -34,7 +34,7 @@ const Detail = () => {
   const [reverse, setReverse] = useState([]);
   const navigate = useNavigate();
   const [submitError, setSubmitError] = useState(null);
-  const { token, profile, clientFetch, isLoading } = useClient();
+  const { token, profile, clientFetch, isLoading, logout } = useClient();
 
   const types_similar = [
     "Dataset",
@@ -484,7 +484,7 @@ const Detail = () => {
 
   //console.log(item.msg)
   if (item.msg === "Token has expired") {
-    navigate("/logout");
+    logout("expired");
   }
 
   //console.log(item.status)
