@@ -11,6 +11,7 @@ const DetailField = ({ d, s, t, u=null, w=null, query_predicate="country" }) => 
         }
     }
 
+    // The route '/users/' + uid + "/entries" is not implemented
     const getUserLink = (uid) => {
         return '/users/' + uid + "/entries"
     }
@@ -121,7 +122,7 @@ const DetailField = ({ d, s, t, u=null, w=null, query_predicate="country" }) => 
                                                 t === 'query' ? <Link to={getQuery(s, u)}>{d}</Link> :
                                                     t === 'color' ? <span style={{backgroundColor: "#" + d, width: "15px", height: "15px", display: "block", borderStyle: "solid", borderWidth: "0px"}}></span> :
                                                         t === 'un' ? <span style={{wordBreak: "break-all"}}>{d}</span> :
-                                                            t === 'user' ? <Link to={getUserLink(u)}>{d}</Link> :
+                                                            t === 'user' ? d :
                                                                 t === 'role' ?
                                                                     (d === 1 ? "Contributor" : "Admin") :
                                                                     formatText(d)

@@ -1,10 +1,10 @@
-import "@material/web/textfield/filled-text-field.js";
-import "@material/web/button/filled-button.js";
-import "@material/web/button/text-button.js";
-import "@material/web/button/text-button.js";
-import "@material/web/switch/switch.js";
-import { useNavigate, Link } from "react-router-dom";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState} from 'react';
+import '@material/web/textfield/filled-text-field.js'
+import '@material/web/button/filled-button.js';
+import '@material/web/button/text-button.js';
+import '@material/web/button/text-button.js';
+import '@material/web/switch/switch.js';
+import {useNavigate} from "react-router-dom";
 import { useClient } from "../client/ClientProvider";
 
 const UpdateProfile = () => {
@@ -30,7 +30,7 @@ const UpdateProfile = () => {
     }
 
     if (!profile) {
-      logout("expired");;
+      logout("expired");
       return;
     }
 
@@ -38,7 +38,7 @@ const UpdateProfile = () => {
     setAffiliation(profile.affiliation);
     setOrcid(profile.orcid);
     setPreferenceEmails(profile.preference_emails);
-  }, [profile, isLoading, navigate]);
+  }, [profile, isLoading, logout]);
 
   const handleSubmitUpdateProfile = async (e) => {
     e.preventDefault();
@@ -141,15 +141,14 @@ const UpdateProfile = () => {
               {error && <div className="profile error">{error}</div>}
             </div>
 
-            <div style={{ marginBottom: 20 }}>
-              <md-filled-button style={{ marginRight: "10px" }} type="submit">
-                Update
-              </md-filled-button>
-            </div>
-          </form>
-        )}
+                        <div style={{"marginBottom":20}}>
+                            <md-filled-button class="md-button-manual-outline" style={{marginRight:"10px"}} type="submit">Update</md-filled-button>
+                        </div>
+                    </form>
+                )}
 
-        {/* Debug Data
+   
+                {/* Debug Data
                 
                  
                 <div className="divTable">

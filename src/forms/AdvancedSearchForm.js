@@ -1,6 +1,7 @@
 import {useNavigate} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import '@material/web/button/filled-button.js';
+import '@material/web/button/outlined-button.js';
 import '@material/web/textfield/filled-text-field.js'
 import SearchSelectBox from "./SearchSelectBox";
 import SearchRadioButtons from "./SearchRadioButtons";
@@ -3058,14 +3059,14 @@ const AdvancedSearchForm = ({ searchParams }) => {
                 }
 
                 <div style={{clear:"both", "marginBottom":20}}>
-                    <md-filled-button id="submitForm" type="submit">Search</md-filled-button>&nbsp;
+                    <md-filled-button class="md-button-manual-outline" id="submitForm" type="submit">Search</md-filled-button>&nbsp;
                     {extraFilters && isInExtraFilters &&
-                        <md-text-button type="button" onClick={() => toggleExtraFilters()}>Hide Extra
-                            Filters</md-text-button>
+                        <md-outlined-button type="button" onClick={() => toggleExtraFilters()}>Hide Extra
+                            Filters</md-outlined-button>
                     }
                     {!extraFilters && isInExtraFilters &&
-                        <md-text-button type="button" onClick={() => toggleExtraFilters()}>Show Extra
-                            Filters</md-text-button>
+                        <md-outlined-button type="button" onClick={() => toggleExtraFilters()}>Show Extra
+                            Filters</md-outlined-button>
                     }
                 </div>
 

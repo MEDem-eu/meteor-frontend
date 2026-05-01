@@ -1,8 +1,8 @@
-import React from "react";
-import "@material/web/textfield/filled-text-field.js";
-import "@material/web/button/filled-button.js";
-import "@material/web/button/text-button.js";
-import { useNavigate, Link, useSearchParams } from "react-router-dom";
+import React from 'react';
+import '@material/web/textfield/filled-text-field.js'
+import '@material/web/button/filled-button.js';
+import '@material/web/button/text-button.js';
+import {useNavigate, Link, useSearchParams} from "react-router-dom";
 import DetailField from "../components/DetailField";
 import DetailExtLink from "../components/DetailExtLink";
 import "@material/web/dialog/dialog.js";
@@ -38,7 +38,7 @@ const Profile = () => {
       // delete account
       const ret = await deleteAccount();
       console.log(ret);
-      logout("accountDeleted");;
+      logout("accountDeleted");
     });
 
     c.addEventListener("click", async () => {
@@ -104,29 +104,11 @@ const Profile = () => {
               />
             </div>
 
-            <div style={{ marginBottom: 20 }}>
-              <md-filled-button
-                style={{ marginRight: "10px" }}
-                type="button"
-                onClick={() => navigate("/profile/update")}
-              >
-                Update Profile
-              </md-filled-button>
-              <md-text-button
-                style={{ marginRight: "10px" }}
-                type="button"
-                onClick={() => navigate("/profile/password/change")}
-              >
-                Change Password
-              </md-text-button>
-              <md-text-button
-                style={{ marginRight: "10px" }}
-                type="button"
-                onClick={() => showDialog()}
-              >
-                Delete Account
-              </md-text-button>
-            </div>
+                        <div style={{"marginBottom":20}}>
+                            <md-filled-button class="md-button-manual-outline" style={{marginRight:"10px"}} type="button" onClick={() => navigate('/profile/update')}>Update Profile</md-filled-button>
+                            <md-outlined-button style={{marginRight:"10px"}} type="button" onClick={() => navigate('/profile/password/change')}>Change Password</md-outlined-button>
+                            <md-outlined-button style={{marginRight:"10px"}} type="button" onClick={() => showDialog()}>Delete Account</md-outlined-button>
+                        </div>
 
             <md-dialog id="dialog">
               <div slot="headline">Are you sure? This cannot be undone!</div>

@@ -59,13 +59,18 @@ const Nav = () => {
                   My Entries
                 </Link>
               </li>
-              {role == 10 && (
+
+              {role >= 2 && (
                 <>
                   <li>
                     <Link className="dropdown-item" to="/review">
                       Review Entries
                     </Link>
                   </li>
+                </>
+              )}
+              {role === 10 && (
+                <>
                   <li>
                     <Link className="dropdown-item" to="/admin/users">
                       Change user Permissions

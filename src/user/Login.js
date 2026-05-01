@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import "@material/web/textfield/filled-text-field.js";
 import "@material/web/textfield/outlined-text-field.js";
+import '@material/web/button/outlined-button.js';
 import "@material/web/button/filled-button.js";
 import "@material/web/checkbox/checkbox.js";
 import "@material/web/button/text-button.js";
@@ -140,28 +141,29 @@ export default function Login({ entry = "login" }) {
           </>
         )}
 
-        <div className="login-register">
+        <div className={login_page ? "login-register md-button-on-white" : "login-register md-button-on-primary"}>
           <md-filled-button
+            class="md-button-manual-outline"
             type="submit"
             id="submitFormLogin"
             style={{ marginRight: "10px", marginBottom: "10px" }}
           >
             Login
           </md-filled-button>
-          <md-text-button
+          <md-outlined-button
             type="button"
             onClick={() => navigate("/password/reset")}
           >
             Forgot Password?
-          </md-text-button>
+          </md-outlined-button>
           {login_page && (
-            <md-text-button
+            <md-outlined-button
               style={{ marginLeft: "10px" }}
               type="button"
               onClick={() => navigate("/register")}
             >
               Need an account? Sign Up
-            </md-text-button>
+            </md-outlined-button>
           )}
         </div>
       </form>

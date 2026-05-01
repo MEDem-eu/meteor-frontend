@@ -51,36 +51,35 @@ const Home = () => {
       <div className="home-login">
         {!isLoggedIn && <Login entry="home" />}
 
-        {/* {loggedIn && (
-          <>
-            {loggedIn.status === 200 && ( */}
         {isLoggedIn && (
           <>
-            {isLoggedIn && (
-              <>
-                <p>
-                  You are logged in
-                  {profile && (
-                    <>
-                      &nbsp;as:
-                      <br />
-                      <Link to="/profile/">{profile.email}</Link>
-                    </>
-                  )}
-                </p>
-                <div
-                  align="right"
-                  style={{ borderTop: "1px solid grey", paddingTop: "10px" }}
-                >
-                  <md-text-button
-                    type="button"
-                    onClick={() => logout("logout")}
+            <p>
+              You are logged in
+              {profile && (
+                <>
+                  &nbsp;as:
+                  <br />
+                  <Link
+                    style={{ color: "var(--color-secondary)" }}
+                    to="/profile/"
                   >
-                    Logout
-                  </md-text-button>
-                </div>
-              </>
-            )}
+                    {profile.email}
+                  </Link>
+                </>
+              )}
+            </p>
+            <div
+              align="right"
+              style={{ borderTop: "1px solid grey", paddingTop: "10px" }}
+            >
+              <md-filled-button
+                class="md-button-manual-outline"
+                type="button"
+                onClick={() => logout("logout")}
+              >
+                Logout
+              </md-filled-button>
+            </div>
           </>
         )}
       </div>

@@ -8,14 +8,12 @@ import "@material/web/button/text-button.js";
 import { useClient } from "../client/ClientProvider";
 
 const ChangePassword = () => {
-  
   const { profile, isLoading, clientFetchPost, logout } = useClient();
   const navigate = useNavigate();
   const [error, setError] = useState(null);
   const [old_pw, setOldPassword] = useState();
   const [new_pw, setNewPassword] = useState();
   const [confirm_new, setConfirmPassword] = useState();
-
 
   useEffect(() => {
     if (isLoading) {
@@ -25,7 +23,7 @@ const ChangePassword = () => {
     if (!profile) {
       logout("expired");
     }
-  }, [profile, isLoading, navigate]);
+  }, [profile, isLoading, logout]);
 
   async function resetPwd(credentials) {
     const response = await clientFetchPost("user/password/change", credentials);
@@ -83,7 +81,9 @@ const ChangePassword = () => {
         {error && <div className="login-register error">{error}</div>}
 
         <div className="login-register">
-          <md-filled-button type="submit">Change Password</md-filled-button>
+          <md-filled-button class="md-button-manual-outline" type="submit">
+            Change Password
+          </md-filled-button>
         </div>
       </form>
     </div>
