@@ -38,36 +38,30 @@ function storeProfile(profile) {
   }
 }
 
-// helper function for isTokenStillValid(token) and isRefreshTokenStillValid(token)
-function parseUtcDateSafe(raw) {
-  if (!raw) return null;
+function decodeJwtPayload(jwt) {
+  if (!jwt) return null;
 
-  const date = new Date(
-    raw.endsWith("Z") || raw.includes("+") ? raw : raw + "+00:00",
-  );
+  try {
+    const base64Url = jwt.split(".")[1];
+    if (!base64Url) return null;
 
-  if (isNaN(date.getTime())) {
-    console.warn("Invalid token expiry or refresh token expiry date:", raw);
+    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+
+    const padded = base64.padEnd(Math.ceil(base64.length / 4) * 4, "=");
+
+    return JSON.parse(atob(padded));
+  } catch (error) {
+    console.warn("Invalid JWT", error);
     return null;
   }
-
-  return date;
 }
 
-function isTokenStillValid(token) {
-  const expiresAt = parseUtcDateSafe(token?.access_token_valid_until);
+function isJwtStillValid(jwt) {
+  const payload = decodeJwtPayload(jwt);
 
-  if (!expiresAt) return false;
+  if (!payload?.exp) return false;
 
-  return expiresAt > new Date();
-}
-
-function isRefreshTokenStillValid(token) {
-  const expiresAt = parseUtcDateSafe(token?.refresh_token_valid_until);
-
-  if (!expiresAt) return false;
-
-  return expiresAt > new Date();
+  return payload.exp * 1000 > Date.now();
 }
 
 export function ClientProvider({ children }) {
@@ -78,6 +72,66 @@ export function ClientProvider({ children }) {
   const [isLoading, setIsLoading] = useState(true);
   const [notifications, setNotifications] = useState([]);
   const [logoutReason, setLogoutReason] = useState(null);
+
+  async function clientFetch(path, options = {}) {
+    // ensure session is valid first
+    // attach Authorization header when token exists
+    // call fetch with base API url + path
+    // return response
+
+    let usableToken = token;
+
+    if (usableToken && !isJwtStillValid(usableToken?.access_token)) {
+      usableToken = await refreshSession(usableToken);
+    }
+
+    const headers = {
+      ...(options.headers || {}),
+    };
+
+    if (usableToken?.access_token) {
+      headers.Authorization = "Bearer " + usableToken.access_token;
+    }
+
+    return fetch(process.env.REACT_APP_API + path, {
+      ...options,
+      headers,
+    });
+  }
+
+  async function clientFetchGet(path, options = {}) {
+    return clientFetch(path, {
+      ...options,
+      method: "GET",
+    });
+  }
+
+  async function clientFetchPost(path, body = null, options = {}) {
+    const request = {
+      ...options,
+      method: "POST",
+      headers: {
+        ...(body !== null ? { "Content-Type": "application/json" } : {}),
+        ...(options.headers || {}),
+      },
+    };
+
+    if (body !== null) {
+      request.body = JSON.stringify(body);
+    }
+
+    return clientFetch(path, request);
+  }
+
+  async function loadOpenApi() {
+    // fetch openapi.json
+    // save in openApi state
+
+    const response = await fetch(process.env.REACT_APP_API + "openapi.json");
+    const data = await response.json();
+    setOpenApi(data);
+    return data;
+  }
 
   async function login(email, password, rememberMe) {
     // call login endpoint
@@ -190,13 +244,13 @@ export function ClientProvider({ children }) {
       return null;
     }
 
-    if (isTokenStillValid(currentToken)) {
+    if (isJwtStillValid(currentToken?.access_token)) {
       return currentToken;
     }
 
     if (
       !currentToken.refresh_token ||
-      !isRefreshTokenStillValid(currentToken)
+      !isJwtStillValid(currentToken?.refresh_token)
     ) {
       await logout("expired");
       return null;
@@ -236,6 +290,14 @@ export function ClientProvider({ children }) {
     // maybe refresh if needed
     // call /user/is_logged_in
     // update isLoggedIn
+    const fetchIsLoggedIn = (currentToken) => {
+      return fetch(process.env.REACT_APP_API + "user/is_logged_in", {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + currentToken.access_token,
+        },
+      });
+    };
 
     let usableToken = currentToken;
 
@@ -244,7 +306,7 @@ export function ClientProvider({ children }) {
       return false;
     }
 
-    if (!isTokenStillValid(usableToken)) {
+    if (!isJwtStillValid(usableToken.access_token)) {
       usableToken = await refreshSession(usableToken);
     }
 
@@ -253,18 +315,21 @@ export function ClientProvider({ children }) {
       return false;
     }
 
-    const response = await fetch(
-      process.env.REACT_APP_API + "user/is_logged_in",
-      {
-        method: "GET",
-        headers: {
-          Authorization: "Bearer " + usableToken.access_token,
-        },
-      },
-    );
+    let response = await fetchIsLoggedIn(usableToken);
+
+    if (response.status === 401 && usableToken.refresh_token) {
+      usableToken = await refreshSession(usableToken);
+
+      if (!usableToken?.access_token) {
+        setIsLoggedIn(false);
+        return false;
+      }
+
+      response = await fetchIsLoggedIn(usableToken);
+    }
 
     const data = await response.json();
-    const ok = data?.status === 200;
+    const ok = data?.is_logged_in === true;
 
     setIsLoggedIn(ok);
 
@@ -274,66 +339,6 @@ export function ClientProvider({ children }) {
     }
 
     return true;
-  }
-
-  async function clientFetch(path, options = {}) {
-    // ensure session is valid first
-    // attach Authorization header when token exists
-    // call fetch with base API url + path
-    // return response
-
-    let usableToken = token;
-
-    if (usableToken && !isTokenStillValid(usableToken)) {
-      usableToken = await refreshSession(usableToken);
-    }
-
-    const headers = {
-      ...(options.headers || {}),
-    };
-
-    if (usableToken?.access_token) {
-      headers.Authorization = "Bearer " + usableToken.access_token;
-    }
-
-    return fetch(process.env.REACT_APP_API + path, {
-      ...options,
-      headers,
-    });
-  }
-
-  async function clientFetchGet(path, options = {}) {
-    return clientFetch(path, {
-      ...options,
-      method: "GET",
-    });
-  }
-
-  async function clientFetchPost(path, body = null, options = {}) {
-    const request = {
-      ...options,
-      method: "POST",
-      headers: {
-        ...(body !== null ? { "Content-Type": "application/json" } : {}),
-        ...(options.headers || {}),
-      },
-    };
-
-    if (body !== null) {
-      request.body = JSON.stringify(body);
-    }
-
-    return clientFetch(path, request);
-  }
-
-  async function loadOpenApi() {
-    // fetch openapi.json
-    // save in openApi state
-
-    const response = await fetch(process.env.REACT_APP_API + "openapi.json");
-    const data = await response.json();
-    setOpenApi(data);
-    return data;
   }
 
   // TODO: for now only reads from the endpoint notifications/all, there is also notifications/unread and notifications/dismiss

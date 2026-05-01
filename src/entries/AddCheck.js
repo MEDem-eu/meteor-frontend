@@ -7,7 +7,7 @@ const AddCheck = () => {
   const [searchParams] = useSearchParams();
   const [duplicates, setDuplicates] = useState([]);
   const [count, setCount] = useState("Loading");
-  const { token, isLoggedIn, isLoading, clientFetchGet, logout } = useClient();
+  const { isLoggedIn, isLoading, clientFetchGet, logout } = useClient();
 
 
 
