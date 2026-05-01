@@ -1,168 +1,151 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useEffect, useState} from 'react';
 import '@material/web/textfield/filled-text-field.js'
 import '@material/web/button/filled-button.js';
 import '@material/web/button/text-button.js';
-import '@material/web/button/outlined-button.js';
+import '@material/web/button/text-button.js';
 import '@material/web/switch/switch.js';
-import {UserContext} from "./UserContext";
-import {useNavigate, Link} from "react-router-dom";
-import DetailHeader from "../components/DetailHeader";
-import {ProfileContext} from "./ProfileContext";
-import getLoggedIn from "./getLoggedIn"
+import {useNavigate} from "react-router-dom";
+import { useClient } from "../client/ClientProvider";
 
 const UpdateProfile = () => {
 
-    const [token, setToken] = useContext(UserContext);
-    const [loggedIn, setLoggedIn] = useState();
-    const navigate = useNavigate();
-    const [profile, setProfile] = useContext(ProfileContext);
-    const [displayName, setDisplayName] = useState();
-    const [affiliation, setAffiliation] = useState();
-    const [orcid, setOrcid] = useState();
-    const [preferenceEmails, setPreferenceEmails] = useState();
-    const [error, setError] = useState(null);
+  const { profile, isLoading, loadProfile, clientFetchPost, logout } = useClient();
 
-    async function updateUser(update) {
-        return fetch(process.env.REACT_APP_API + 'user/profile/update', {
-            method: 'POST',
-            headers: {
-                'Authorization': 'Bearer ' + token?.access_token,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(update)
-        })
-            .then(data => data.json())
+  const navigate = useNavigate();
+  const [displayName, setDisplayName] = useState();
+  const [affiliation, setAffiliation] = useState();
+  const [orcid, setOrcid] = useState();
+  const [preferenceEmails, setPreferenceEmails] = useState();
+  const [error, setError] = useState(null);
 
+  async function updateUser(update) {
+    const response = await clientFetchPost("user/profile/update", update);
+
+    return response.json();
+  }
+
+  useEffect(() => {
+    if (isLoading) {
+      return;
     }
 
-    const getData = () => {
-        getLoggedIn(token, setLoggedIn, setToken, navigate)
-        return fetch(process.env.REACT_APP_API + 'user/profile', {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Bearer ' + token?.access_token
-            },
-        }).then(response => response.json())
-            .then(data => {
-                console.log(data)
-                if (data._account_status === 'active'){
-                    setProfile(data)
-                    setDisplayName(data.display_name)
-                    setAffiliation(data.affiliation)
-                    setOrcid(data.orcid)
-                    setPreferenceEmails(data.preference_emails)
-                } else {
-                    navigate("/logout")
-                }
-            });
+    if (!profile) {
+      logout("expired");
+      return;
     }
 
-    useEffect(() => {
-        getData()
-    }, [token])
+    setDisplayName(profile.display_name);
+    setAffiliation(profile.affiliation);
+    setOrcid(profile.orcid);
+    setPreferenceEmails(profile.preference_emails);
+  }, [profile, isLoading, logout]);
 
-    const handleSubmitUpdateProfile = async e => {
-        e.preventDefault();
-        let data_json = {}
-        let details_json = {}
-        details_json["display_name"] = displayName
-        details_json["affiliation"] = affiliation
-        details_json["orcid"] = orcid
-        details_json["preference_emails"] = preferenceEmails
-        data_json["data"] = details_json
-        //console.log(data_json)
+  const handleSubmitUpdateProfile = async (e) => {
+    e.preventDefault();
+    let data_json = {};
+    let details_json = {};
+    details_json["display_name"] = displayName;
+    details_json["affiliation"] = affiliation;
+    details_json["orcid"] = orcid;
+    details_json["preference_emails"] = preferenceEmails;
+    data_json["data"] = details_json;
+    //console.log(data_json)
 
-        const ret = await updateUser(data_json);
-        // console.log(ret)
-        if (ret.status === 200) {
-            setError(null)
+    const ret = await updateUser(data_json);
+    // console.log(ret)
+    if (ret.status === 200) {
+      setError(null);
 
-            await getData()
+      //   await getData();
+      const updatedProfile = await loadProfile();
 
-            navigate(
-                '/profile?msg=' + ret.message
-            )
-        } else {
-            setError(ret.message)
-        }
+      if (updatedProfile) {
+        setDisplayName(updatedProfile.display_name);
+        setAffiliation(updatedProfile.affiliation);
+        setOrcid(updatedProfile.orcid);
+        setPreferenceEmails(updatedProfile.preference_emails);
+      }
 
+      navigate("/profile?msg=" + ret.message);
+    } else {
+      setError(ret.message);
     }
+  };
 
-    const updateSwitch = (e) => {
-        //console.log(e)
-        if (e.target.selected === true){
-            setPreferenceEmails(null)
-        } else {
-            setPreferenceEmails(true)
-        }
-
+  const updateSwitch = (e) => {
+    //console.log(e)
+    if (e.target.selected === true) {
+      setPreferenceEmails(null);
+    } else {
+      setPreferenceEmails(true);
     }
+  };
 
-    const initialSwitch = () => {
-        if (preferenceEmails){
-            return true
-        } else {
-            return null
-        }
+  const initialSwitch = () => {
+    if (preferenceEmails) {
+      return true;
+    } else {
+      return null;
     }
+  };
 
-    //console.log(preferenceEmails)
+  //console.log(preferenceEmails)
 
-    return (
-        <>
-            <div>
-                {profile &&
-                    <form onSubmit={handleSubmitUpdateProfile}>
-                        <div className="divTable">
-                            <h3>Update Profile</h3>
+  return (
+    <>
+      <div>
+        {profile && (
+          <form onSubmit={handleSubmitUpdateProfile}>
+            <div className="divTable">
+              <h3>Update Profile</h3>
 
-                            <div className="profile">
-                                <md-filled-text-field
-                                    value={profile.display_name}
-                                    label="Display Name"
-                                    type="text"
-                                    onBlur={e => setDisplayName(e.target.value)}
-                                    required
-                                />
-                            </div>
+              <div className="profile">
+                <md-filled-text-field
+                  //   value={profile.display_name}
+                  value={displayName || ""}
+                  label="Display Name"
+                  type="text"
+                  onBlur={(e) => setDisplayName(e.target.value)}
+                  required
+                />
+              </div>
 
-                            <div className="profile">
-                                <md-filled-text-field
-                                    value={profile.affiliation}
-                                    label="Affiliation"
-                                    type="text"
-                                    onBlur={e => setAffiliation(e.target.value)}
-                                />
-                            </div>
+              <div className="profile">
+                <md-filled-text-field
+                  //   value={profile.affiliation}
+                  value={affiliation || ""}
+                  label="Affiliation"
+                  type="text"
+                  onBlur={(e) => setAffiliation(e.target.value)}
+                />
+              </div>
 
-                            <div className="profile">
-                                <md-filled-text-field
-                                    value={profile.orcid}
-                                    label="ORCID"
-                                    type="text"
-                                    onBlur={e => setOrcid(e.target.value)}
-                                />
-                            </div>
+              <div className="profile">
+                <md-filled-text-field
+                  //   value={profile.orcid}
+                  value={orcid || ""}
+                  label="ORCID"
+                  type="text"
+                  onBlur={(e) => setOrcid(e.target.value)}
+                />
+              </div>
 
-                            <div className="profile">
-                                    <md-switch
-                                        selected={initialSwitch()}
-                                        onClick={e => updateSwitch(e)}
-                                    />
-                                    &nbsp;Send me notification emails
-                            </div>
+              <div className="profile">
+                <md-switch
+                  selected={initialSwitch()}
+                  onClick={(e) => updateSwitch(e)}
+                />
+                &nbsp;Send me notification emails
+              </div>
 
-                            {error &&
-                                <div className="profile error">{error}</div>
-                            }
-
-                        </div>
+              {error && <div className="profile error">{error}</div>}
+            </div>
 
                         <div style={{"marginBottom":20}}>
                             <md-filled-button class="md-button-manual-outline" style={{marginRight:"10px"}} type="submit">Update</md-filled-button>
                         </div>
                     </form>
-                }
+                )}
 
    
                 {/* Debug Data
@@ -185,13 +168,9 @@ const UpdateProfile = () => {
                     />
                 </div>
                 */}
-                
-
-            </div>
-        </>
-    )
-    
-
+      </div>
+    </>
+  );
 };
 
 export default UpdateProfile;

@@ -1,34 +1,11 @@
-import React, {useEffect, useState} from "react";
-import { useOpenAPI } from "./APISpecs";
+import React from "react";
+import { useClient } from "../client/ClientProvider";
 
 const Version = () => {
+  const { openApi } = useClient();
+  const apiVersion = openApi?.info?.version;
 
-    const openApi = useOpenAPI();
-    const [loading, setLoading] = useState(true);
-    const [apiVersion, setApiVersion] = useState(null);
-
-    useEffect(() => {
-        const fetchData = async () => {
-          try {
-            const data = await openApi.getData();
-            setApiVersion(data.info?.version);
-          } catch (error) {
-            console.error('Error fetching data:', error);
-          } finally {
-            setLoading(false);
-          }
-        };
-    
-        fetchData();
-      }, [apiVersion, openApi]);
-
-    return (
-        <>
-            {apiVersion &&
-                <span className="version">{apiVersion}</span>
-            }
-        </>
-    )
-}
+  return <>{apiVersion && <span className="version">{apiVersion}</span>}</>;
+};
 
 export default Version;
