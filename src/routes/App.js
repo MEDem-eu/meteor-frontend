@@ -35,6 +35,7 @@ import Review from "../entries/Review";
 import ReviewLink from "../entries/ReviewLink";
 import { ClientProvider } from "../client/ClientProvider";
 import LogoutRedirectHandler from "../client/LogoutRedirectHandler";
+import DetailNew from "../pages/DetailNew";
 
 const App = () => {
   return (
@@ -86,6 +87,7 @@ const App = () => {
 
             {/* Dynamic pages */}
             <Route path="detail/:uid" element={<Detail />} />
+            <Route path="detail-new/:uid" element={<DetailNew />} />
 
             {/* Add Entry pages */}
             <Route path="add/check" element={<AddCheck />} />

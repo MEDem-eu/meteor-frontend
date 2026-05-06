@@ -2,7 +2,7 @@
 
 .codex
 /codex
-
+/.temp
 
 # dependencies
 /node_modules
