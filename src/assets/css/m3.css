@@ -10,20 +10,21 @@
     /* Outlined Button */
     --md-outlined-button-container-shape: 5px;
     --md-outlined-button-label-text-font: system-ui;
-    --md-outlined-button-hover-label-text-color: white;
-    --md-outlined-button-hover-state-layer-color: #0e68b9;
+    --md-outlined-button-hover-label-text-color: var(--color-text);
+    --md-outlined-button-hover-state-layer-color: var(--color-primary);
     --md-outlined-button-hover-state-layer-opacity: 100;
-    --md-outlined-button-outline-color: #0e68b9;
-    --md-outlined-button-label-text-color: white;
+    --md-outlined-button-outline-color: var(--color-secondary);
+    --md-outlined-button-label-text-color: var(--color-secondary);
 
     /* Filled Button */
     --md-filled-button-container-shape: 5px;
     --md-filled-button-label-text-font: system-ui;
     --md-filled-button-container-color: var(--color-secondary);
     --md-filled-button-label-text-color: var(--color-text-secondary);
-    --md-filled-button-hover-label-text-color: black;
+    --md-filled-button-hover-label-text-color: var(--color-text);
     --md-filled-button-hover-state-layer-color: var(--color-primary);
     --md-filled-button-hover-state-layer-opacity: 100;
+    --md-filled-button-hover-container-elevation: 0;
 
     /* Text Button */
     --md-text-button-container-shape: 5px;
@@ -82,28 +83,38 @@
     --md-checkbox-selected-pressed-state-layer-color: white;
     --md-checkbox-selected-pressed-state-layer-opacity: 50%; */
 
-    --color-checkbox-primary: var(--color-primary);
-    --color-checkbox-secondary: var(--color-secondary);
-    --md-checkbox-focus-outline-color: var(--color-checkbox-primary);
-    --md-checkbox-hover-outline-color: var(--color-checkbox-primary);
+
+
+    /* --md-checkbox-focus-outline-color: var(--color-checkbox-primary);
+    --md-checkbox-hover-outline-color: var(--color-checkbox-secondary);
     --md-checkbox-hover-state-layer-color: var(--color-checkbox-primary);
     --md-checkbox-hover-state-layer-opacity: 50%;
-    --md-checkbox-outline-color: var(--color-checkbox-primary);
+    --md-checkbox-outline-color: var(--color-checkbox-secondary);
     --md-checkbox-pressed-outline-color: var(--color-checkbox-primary);
     --md-checkbox-pressed-state-layer-color: var(--color-checkbox-primary);
-    --md-checkbox-pressed-state-layer-opacity: 50%;
+    --md-checkbox-pressed-state-layer-opacity: 40%;
     --md-checkbox-selected-container-color: var(--color-checkbox-secondary);
     --md-checkbox-selected-focus-container-color: var(--color-checkbox-primary);
     --md-checkbox-selected-focus-icon-color: var(--color-checkbox-secondary);
     --md-checkbox-selected-hover-container-color: var(--color-checkbox-secondary);
     --md-checkbox-selected-hover-icon-color: var(--color-checkbox-primary);
     --md-checkbox-selected-hover-state-layer-color: var(--color-checkbox-primary);
-    --md-checkbox-selected-hover-state-layer-opacity: 50%;
+    --md-checkbox-selected-hover-state-layer-opacity: 40%;
     --md-checkbox-selected-icon-color: var(--color-checkbox-primary);
     --md-checkbox-selected-pressed-container-color: var(--color-checkbox-primary);
     --md-checkbox-selected-pressed-icon-color: var(--color-checkbox-primary);
     --md-checkbox-selected-pressed-state-layer-color: var(--color-checkbox-primary);
-    --md-checkbox-selected-pressed-state-layer-opacity: 50%;
+    --md-checkbox-selected-pressed-state-layer-opacity: 50%; */
+
+    --color-checkbox-primary: var(--color-primary);
+    --color-checkbox-secondary: var(--color-secondary);
+    --md-checkbox-outline-color: var(--color-checkbox-secondary);
+    --md-checkbox-hover-outline-color: var(--color-checkbox-secondary);
+    --md-checkbox-selected-container-color: var(--color-checkbox-secondary);
+    --md-checkbox-selected-focus-container-color: var(--color-checkbox-secondary);
+    --md-checkbox-selected-pressed-container-color: var(--color-checkbox-secondary);
+    --md-checkbox-selected-icon-color: var(--color-checkbox-primary);
+    --md-checkbox-hover-state-layer-color: var(--color-checkbox-primary);
 
     /* Dialog */
     --md-dialog-container-color: lightskyblue;
@@ -132,5 +143,50 @@
     vertical-align: bottom;
 }
 
+.md-button-on-primary {
+    /* Outlined Button */
+    --md-outlined-button-container-shape: 5px;
+    --md-outlined-button-label-text-font: system-ui;
+    --md-outlined-button-hover-label-text-color: var(--color-text);
+    --md-outlined-button-hover-state-layer-color: var(--color-background);
+    --md-outlined-button-hover-state-layer-opacity: 100;
+    --md-outlined-button-outline-color: var(--color-secondary);
+    --md-outlined-button-label-text-color: var(--color-secondary);
 
+    /* Filled Button */
+    --md-filled-button-container-shape: 5px;
+    --md-filled-button-label-text-font: system-ui;
+    --md-filled-button-container-color: var(--color-secondary);
+    --md-filled-button-label-text-color: var(--color-text-secondary);
+    --md-filled-button-hover-label-text-color: var(--color-text);
+    --md-filled-button-hover-state-layer-color: var(--color-background);
+    --md-filled-button-hover-state-layer-opacity: 100;
+
+} 
+
+.md-button-on-white {
+    /* Outlined Button */
+    --md-outlined-button-container-shape: 5px;
+    --md-outlined-button-label-text-font: system-ui;
+    --md-outlined-button-hover-label-text-color: var(--color-text);
+    --md-outlined-button-hover-state-layer-color: var(--color-primary);
+    --md-outlined-button-hover-state-layer-opacity: 100;
+    --md-outlined-button-outline-color: var(--color-secondary);
+    --md-outlined-button-label-text-color: var(--color-secondary);
+
+    /* Filled Button */
+    --md-filled-button-container-shape: 5px;
+    --md-filled-button-label-text-font: system-ui;
+    --md-filled-button-container-color: var(--color-secondary);
+    --md-filled-button-label-text-color: var(--color-text-secondary);
+    --md-filled-button-hover-label-text-color: var(--color-text);
+    --md-filled-button-hover-state-layer-color: var(--color-primary);
+    --md-filled-button-hover-state-layer-opacity: 100;
+}
+
+/* class to give md filled buttons an outline */
+.md-button-manual-outline {
+    border: 1px solid var(--color-secondary);
+    border-radius: 7px;
+}
 

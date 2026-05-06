@@ -1,4 +1,4 @@
-import {BrowserRouter, Route, Routes} from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import React from "react";
 import Layout from "../layout/Layout";
 import Home from "../pages/Home";
@@ -16,11 +16,6 @@ import NotImplemented from "../pages/NotImplemented";
 import Search from "../search/Search";
 import SearchLink from "../search/SearchLink";
 import LoginPage from "../pages/LoginPage";
-import UseToken from "../user/UseToken";
-import Logout from "../user/Logout";
-import {UserContext} from "../user/UserContext";
-import {ProfileContext} from "../user/ProfileContext";
-import UseProfile from "../user/UseProfile";
 import Profile from "../user/Profile";
 import UpdateProfile from "../user/UpdateProfile";
 import RequestPasswordReset from "../user/RequestPasswordReset";
@@ -29,9 +24,8 @@ import ChangePassword from "../user/ChangePassword";
 import Users from "../user/Users";
 import UpdateUser from "../user/UpdateUser";
 import ResendVerificationEmail from "../user/ResendVerificationEmail";
-import { OpenAPIProvider } from "../components/APISpecs";
 import Accreditation from "../pages/Accreditation";
-import Add from "../entries/Add"
+import Add from "../entries/Add";
 import GuidesNewssource from "../pages/GuidesNewssource";
 import AddCheck from "../entries/AddCheck";
 import AddEntry from "../entries/AddEntry";
@@ -39,79 +33,77 @@ import Entries from "../entries/Entries";
 import Rejected from "../entries/Rejected";
 import Review from "../entries/Review";
 import ReviewLink from "../entries/ReviewLink";
+import { ClientProvider } from "../client/ClientProvider";
+import LogoutRedirectHandler from "../client/LogoutRedirectHandler";
 
-const App = () =>  {
-
-  const { token, setToken } = UseToken();
-  const { profile, setProfile } = UseProfile();
-
+const App = () => {
   return (
-    <UserContext.Provider value={[token, setToken]}>
-        <ProfileContext.Provider value={[profile, setProfile]}>
-          <BrowserRouter>
-            <OpenAPIProvider>
-            <Routes>
+    <ClientProvider>
+      <BrowserRouter>
+        <LogoutRedirectHandler />
+        <Routes>
+          {/* Main layout route - included in every page */}
+          <Route path="/" element={<Layout />}>
+            {/* ---Child routes--- */}
+            {/* Home */}
+            <Route index element={<Home />} />
 
-              {/* Main layout route - included in every page */}
-              <Route path="/" element={<Layout />}>
+            {/* Search pages */}
+            <Route path="search/link" element={<SearchLink />} />
+            <Route path="search" element={<Search />} />
 
-                {/* ---Child routes--- */}
-                {/* Home */}
-                <Route index element={<Home />} />
+            {/* Nav pages */}
+            <Route path="guides" element={<Guides />} />
+            <Route path="guides/newssource" element={<GuidesNewssource />} />
+            <Route path="link-collection" element={<LinkCollection />} />
+            <Route path="teaching-materials" element={<TeachingMaterials />} />
+            <Route path="faq" element={<Faq />} />
+            <Route path="about" element={<About />} />
 
-                {/* Search pages */}
-                <Route path="search/link" element={<SearchLink />} />
-                <Route path="search" element={<Search />} />
+            {/* User pages */}
+            <Route path="login" element={<LoginPage />} />
+            <Route path="register" element={<Register />} />
+            <Route
+              path="register/resend"
+              element={<ResendVerificationEmail />}
+            />
 
-                {/* Nav pages */}
-                <Route path="guides" element={<Guides />} />
-                <Route path="guides/newssource" element={<GuidesNewssource />} />
-                <Route path="link-collection" element={<LinkCollection />} />
-                <Route path="teaching-materials" element={<TeachingMaterials />} />
-                <Route path="faq" element={<Faq />} />
-                <Route path="about" element={<About />} />
+            <Route path="profile" element={<Profile />} />
+            <Route path="profile/update" element={<UpdateProfile />} />
+            <Route path="password/reset" element={<RequestPasswordReset />} />
+            <Route path="password/reset/:token" element={<ResetPassword />} />
+            <Route
+              path="profile/password/change"
+              element={<ChangePassword />}
+            />
+            <Route path="admin/users" element={<Users />} />
+            <Route path="admin/users/:uid" element={<UpdateUser />} />
 
-                {/* User pages */}
-                <Route path="login" element={<LoginPage setToken={setToken} token={token} setProfile={setProfile} />} />
-                <Route path="register" element={<Register />} />
-                <Route path="register/resend" element={<ResendVerificationEmail />} />
-                <Route path="logout" element={<Logout />} />
-                <Route path="profile" element={<Profile />} />
-                <Route path="profile/update" element={<UpdateProfile />} />
-                <Route path="password/reset" element={<RequestPasswordReset />} />
-                <Route path="password/reset/:token" element={<ResetPassword />} />
-                <Route path="profile/password/change" element={<ChangePassword />} />
-                <Route path="admin/users" element={<Users />} />
-                <Route path="admin/users/:uid" element={<UpdateUser />} />
+            {/* Footer pages */}
+            <Route path="privacy" element={<PrivacyPolicyAndConsent />} />
+            <Route path="imprint" element={<Imprint />} />
+            <Route path="accreditation" element={<Accreditation />} />
 
-                {/* Footer pages */}
-                <Route path="privacy" element={<PrivacyPolicyAndConsent />} />
-                <Route path="imprint" element={<Imprint />} />
-                <Route path="accreditation" element={<Accreditation />} />
+            {/* Dynamic pages */}
+            <Route path="detail/:uid" element={<Detail />} />
 
-                {/* Dynamic pages */}
-                <Route path="detail/:uid" element={<Detail />} />
+            {/* Add Entry pages */}
+            <Route path="add/check" element={<AddCheck />} />
+            <Route path="add/entry" element={<AddEntry />} />
+            <Route path="add" element={<Add />} />
+            <Route path="edit/:uid" element={<AddEntry />} />
+            <Route path="rejected/:uid" element={<Rejected />} />
+            <Route path="profile/entries" element={<Entries />} />
+            <Route path="review" element={<Review />} />
+            <Route path="review/link" element={<ReviewLink />} />
 
-                {/* Add Entry pages */}
-                <Route path="add/check" element={<AddCheck />} />
-                <Route path="add/entry" element={<AddEntry />} />
-                <Route path="add" element={<Add />} />
-                <Route path="edit/:uid" element={<AddEntry />} />
-                <Route path="rejected/:uid" element={<Rejected />} />
-                <Route path="profile/entries" element={<Entries />} />
-                <Route path="review" element={<Review />} />
-                <Route path="review/link" element={<ReviewLink />} />
-
-                {/* No page */}
-                <Route path="*" element={<NoPage />} />
-
-              </Route>
-            </Routes>
-          </OpenAPIProvider>
-          </BrowserRouter>
-        </ProfileContext.Provider>
-      </UserContext.Provider>
+            {/* No page */}
+            <Route path="*" element={<NoPage />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </ClientProvider>
   );
-}
+};
 
 export default App;

@@ -1,29 +1,17 @@
 import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import "@material/web/textfield/filled-text-field.js";
 import "@material/web/textfield/outlined-text-field.js";
+import '@material/web/button/outlined-button.js';
 import "@material/web/button/filled-button.js";
 import "@material/web/checkbox/checkbox.js";
 import "@material/web/button/text-button.js";
-import loginProfile from "./loginProfile";
+import { useClient } from "../client/ClientProvider";
 
-async function loginUser(credentials) {
-  return fetch(process.env.REACT_APP_API + "user/login/token", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(credentials),
-  }).then((data) => data.json());
-}
 
-export default function Login({
-  setToken,
-  token,
-  setProfile,
-  entry = "login",
-}) {
+export default function Login({ entry = "login" }) {
+  const { login } = useClient();
+
   const navigate = useNavigate();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
@@ -65,21 +53,13 @@ export default function Login({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const token = await loginUser({
-      email,
-      password,
-    });
-    if (token.status === 200) {
-      if (!rememberMe) {
-        delete token.refresh_token_valid_until;
-        delete token.refresh_token;
-      }
-      setToken(token);
+
+    try {
+      await login(email, password, rememberMe);
       setError(null);
-      await loginProfile(token, setProfile);
       navigate("/profile");
-    } else {
-      setError(token.message);
+    } catch (error) {
+      setError(error.message);
     }
   };
 
@@ -114,16 +94,6 @@ export default function Login({
       )}
       <form onSubmit={handleSubmit}>
         <div className="login-register">
-          {/*
-                    <md-filled-text-field
-                        name="username"
-                        label="Email"
-                        type="email"
-                        autoComplete='on'
-                        onBlur={e => setEmail(e.target.value)}
-                        required
-                    />
-                    */}
           <strong>Email:</strong>
           <br />
           <input
@@ -135,16 +105,6 @@ export default function Login({
         </div>
 
         <div className="login-register">
-          {/*
-                    <md-filled-text-field
-                        name="password"
-                        label="Password"
-                        type="password"
-                        onBlur={e => setPassword(e.target.value)}
-                        autoComplete='on'
-                        required
-                    />
-                    */}
           <strong>Password:</strong>
           <br />
           <input
@@ -181,28 +141,29 @@ export default function Login({
           </>
         )}
 
-        <div className="login-register">
+        <div className={login_page ? "login-register md-button-on-white" : "login-register md-button-on-primary"}>
           <md-filled-button
+            class="md-button-manual-outline"
             type="submit"
             id="submitFormLogin"
             style={{ marginRight: "10px", marginBottom: "10px" }}
           >
             Login
           </md-filled-button>
-          <md-text-button
+          <md-outlined-button
             type="button"
             onClick={() => navigate("/password/reset")}
           >
             Forgot Password?
-          </md-text-button>
+          </md-outlined-button>
           {login_page && (
-            <md-text-button
+            <md-outlined-button
               style={{ marginLeft: "10px" }}
               type="button"
               onClick={() => navigate("/register")}
             >
               Need an account? Sign Up
-            </md-text-button>
+            </md-outlined-button>
           )}
         </div>
       </form>
@@ -210,6 +171,3 @@ export default function Login({
   );
 }
 
-Login.propTypes = {
-  setToken: PropTypes.func.isRequired,
-};

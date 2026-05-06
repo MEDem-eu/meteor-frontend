@@ -1,49 +1,35 @@
-import {useNavigate, Link, useSearchParams, useParams} from "react-router-dom";
-import React, {useContext, useEffect, useState} from "react";
-import {UserContext} from "../user/UserContext";
-import getLoggedIn from "../user/getLoggedIn";
-import getProfile from "../user/getProfile";
-import {ProfileContext} from "../user/ProfileContext";
+import { useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import DetailField from "../components/DetailField";
 import DetailHeader from "../components/DetailHeader";
+import { useClient } from "../client/ClientProvider";
 
 const Rejected = () => {
 
     let { uid } = useParams();
-    const navigate = useNavigate();
-    const [token, setToken] = useContext(UserContext);
     const [item, setItem] = useState()
-    const [loggedIn, setLoggedIn] = useState();
-    const [profile, setProfile] = useContext(ProfileContext);
+    const { isLoggedIn, isLoading, clientFetchGet } = useClient();
 
-    const getData = () => {
-        getLoggedIn(token, setLoggedIn, setToken, navigate)
-        getProfile(setProfile)
-    }
 
-    const fetchItemData = () => {
-        // fetch types
-        fetch(process.env.REACT_APP_API + "view/rejected/" + uid, {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Bearer ' + token?.access_token
-            },
-        })
-            .then(response => {
-                return response.json()
-            })
-            .then(data => {
-                setItem(data);
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+    const fetchItemData = async () => {
+        try {
+            const response = await clientFetchGet("view/rejected/" + uid);
+
+            const data = await response.json();
+
+            setItem(data);
+        } catch (err) {
+            console.log(err);
+        }
     }
 
     useEffect(() => {
-        getData()
+        if (isLoading || !isLoggedIn || !uid) {
+            return;
+        }
+
         fetchItemData()
-    }, [])
+    }, [isLoading, isLoggedIn, uid])
 
     const retDate = (d) => {
         if (d){
@@ -82,7 +68,7 @@ const Rejected = () => {
                     s="Creation Date"
                 />
                 <DetailField
-                    d={item?._added_by.display_name}
+                    d={item?._added_by?.display_name}
                     s="Creation By"
                 />
                 <DetailField
@@ -90,7 +76,7 @@ const Rejected = () => {
                     s="Status"
                 />
                 <DetailField
-                    d={item?._reviewed_by.display_name}
+                    d={item?._reviewed_by?.display_name}
                     s="Reviewed By"
                 />
             </div>

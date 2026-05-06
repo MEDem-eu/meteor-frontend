@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import {useNavigate, Link} from "react-router-dom";
 import '@material/web/textfield/filled-text-field.js'
 import '@material/web/button/filled-button.js';
+import '@material/web/button/outlined-button.js';
 import '@material/web/button/text-button.js';
 
 
@@ -82,8 +83,8 @@ const Register = () => {
                         <div className="login-register error">{error}</div>
                     }
 
-                    <div className="login-register">
-                        <md-filled-button type="submit">Create Account</md-filled-button> <md-text-button type="button" onClick={() => navigate('login')}>Already Have an Account? Sign in</md-text-button>
+                    <div className="login-register md-button-on-primary">
+                        <md-filled-button class="md-button-manual-outline" type="submit">Create Account</md-filled-button> <md-outlined-button type="button" onClick={() => navigate('login')}>Already Have an Account? Sign in</md-outlined-button>
                     </div>
                     <p>We save your email address and IP address locally on this server (hosted in the EU). Your data is not shared with third parties and retained until you decide to delete your account. Your email address is used for technical purposes (e.g. login) and to contact you for administrative purposes. We reserve the right to process your IP address for creating anonymous usage statistics.</p>
 
