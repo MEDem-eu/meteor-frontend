@@ -28,6 +28,7 @@ const DetailNew = () => {
   const { openApi, clientFetchGet, isLoading } = useClient();
 
   const [item, setItem] = useState(null);
+  const [reverse, setReverse] = useState({});
   const [error, setError] = useState(null);
 
   function getDgraphType(entry) {
@@ -189,13 +190,32 @@ const DetailNew = () => {
         const fallbackResponse = await clientFetchGet("view/uid/" + uid);
         const fallbackData = await fallbackResponse.json();
         setItem(fallbackData);
+        await fetchReverseData(fallbackData.uid);
         return;
       }
 
       setItem(data);
+      await fetchReverseData(data.uid);
     } catch (err) {
       console.error(err);
       setError("Could not load entry.");
+    }
+  }
+
+  async function fetchReverseData(entryUid) {
+    if (!entryUid) {
+      setReverse({});
+      return;
+    }
+
+    try {
+      const response = await clientFetchGet("view/reverse/" + entryUid);
+      const data = await response.json();
+
+      setReverse(data ?? {});
+    } catch (err) {
+      console.error(err);
+      setReverse({});
     }
   }
 
@@ -230,6 +250,9 @@ const DetailNew = () => {
   const type = getDgraphType(item);
   const fieldNames = getFieldNames(openApi, type);
   const typeDescription = getTypeDescription(openApi, type);
+  const reverseEntries = Object.entries(reverse).filter(
+    ([, value]) => Array.isArray(value) && value.length > 0,
+  );
 
   return (
     <>
@@ -239,9 +262,7 @@ const DetailNew = () => {
           New Search
         </button>
       </p>
-
       <h1>{item.name}</h1>
-
       <div className="divTable">
         <div className="divTableBody">
           <div className="divTableRow">
@@ -257,7 +278,6 @@ const DetailNew = () => {
           )}
         </div>
       </div>
-
       <div className="divTable">
         <div className="divTableBody">
           <div className="divTableRow">
@@ -290,6 +310,43 @@ const DetailNew = () => {
           })}
         </div>
       </div>
+      {reverseEntries.length > 0 && (
+        <div className="divTable">
+          <div className="divTableBody">
+            <div className="divTableRow">
+              <div className="divTableHead">
+                <h3>Referenced By</h3>
+              </div>
+            </div>
+
+            {reverseEntries.map(([predicate, entries]) => (
+              <div className="divTableRow" key={predicate}>
+                <div className="divTableHead">
+                  {getFieldLabel(openApi, type, predicate)}:
+                </div>
+                <div className="divTableCell">
+                  {renderFieldValue(entries, predicate)}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+      // debug block
+      {process.env.NODE_ENV === "development" && (
+        <div className="divTable">
+          <div className="divTableBody">
+            <div className="divTableRow">
+              <div className="divTableHead">
+                <h3>Reverse Debug</h3>
+              </div>
+              <div className="divTableCell">
+                <pre>{JSON.stringify(reverse, null, 2)}</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };
