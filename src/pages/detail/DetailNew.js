@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useClient } from "../client/ClientProvider";
+import { useClient } from "../../client/ClientProvider";
+import Tooltip from "@mui/material/Tooltip";
+import Zoom from "@mui/material/Zoom";
+import InfoIcon from "@mui/icons-material/Info";
+import DetailReverseSummary from "./DetailReverseSummary";
+import DetailReverseList from "./DetailReverseList";
 import {
   getFieldLabel,
   getFieldNames,
   getTypeDescription,
   hasDisplayValue,
-} from "../client/schemaHelpers";
+} from "../../client/schemaHelpers";
 
 const HIDDEN_DETAIL_FIELDS = [
   "_added_by",
@@ -163,12 +168,7 @@ const DetailNew = () => {
           );
         }
 
-        return (
-          <React.Fragment key={index}>
-            {separator}
-            <pre>{JSON.stringify(entry, null, 2)}</pre>
-          </React.Fragment>
-        );
+        return null;
       });
     }
 
@@ -176,7 +176,7 @@ const DetailNew = () => {
       return renderEntryLink(value);
     }
 
-    return <pre>{JSON.stringify(value, null, 2)}</pre>;
+    return null;
   }
 
   async function fetchItemData() {
@@ -266,23 +266,27 @@ const DetailNew = () => {
       <div className="divTable">
         <div className="divTableBody">
           <div className="divTableRow">
-            <div className="divTableHead">Type:</div>
-            <div className="divTableCell">{type}</div>
-          </div>
-
-          {typeDescription && (
-            <div className="divTableRow">
-              <div className="divTableHead">Type Description:</div>
-              <div className="divTableCell">{typeDescription}</div>
-            </div>
-          )}
-        </div>
-      </div>
-      <div className="divTable">
-        <div className="divTableBody">
-          <div className="divTableRow">
             <div className="divTableHead">
-              <h3>Schema Fields</h3>
+              <h3>General Information</h3>
+            </div>
+          </div>
+          <div className="divTableRow">
+            <div className="divTableHead">Type:</div>
+            <div className="divTableCell">
+              {type}
+              {typeDescription && (
+                <Tooltip
+                  title={typeDescription}
+                  arrow
+                  TransitionComponent={Zoom}
+                  placement="right"
+                >
+                  <InfoIcon
+                    fontSize="small"
+                    style={{ marginLeft: "6px", verticalAlign: "middle" }}
+                  />
+                </Tooltip>
+              )}
             </div>
           </div>
 
@@ -310,43 +314,9 @@ const DetailNew = () => {
           })}
         </div>
       </div>
-      {reverseEntries.length > 0 && (
-        <div className="divTable">
-          <div className="divTableBody">
-            <div className="divTableRow">
-              <div className="divTableHead">
-                <h3>Referenced By</h3>
-              </div>
-            </div>
+      <DetailReverseList reverseEntries={reverseEntries} />
 
-            {reverseEntries.map(([predicate, entries]) => (
-              <div className="divTableRow" key={predicate}>
-                <div className="divTableHead">
-                  {getFieldLabel(openApi, type, predicate)}:
-                </div>
-                <div className="divTableCell">
-                  {renderFieldValue(entries, predicate)}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-      // debug block
-      {process.env.NODE_ENV === "development" && (
-        <div className="divTable">
-          <div className="divTableBody">
-            <div className="divTableRow">
-              <div className="divTableHead">
-                <h3>Reverse Debug</h3>
-              </div>
-              <div className="divTableCell">
-                <pre>{JSON.stringify(reverse, null, 2)}</pre>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <DetailReverseSummary item={item} type={type} />
     </>
   );
 };
