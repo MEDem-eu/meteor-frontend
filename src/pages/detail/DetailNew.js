@@ -127,6 +127,10 @@ const DetailNew = () => {
       return renderExternalLink(value, "https://www.wikidata.org/wiki/");
     }
 
+    if (fieldName === "openalex") {
+      return renderExternalLink(value, "https://openalex.org/");
+    }
+
     if (
       isIsoDateString(value) ||
       (Array.isArray(value) && value.every(isIsoDateString))
