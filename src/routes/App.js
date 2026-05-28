@@ -87,7 +87,7 @@ const App = () => {
 
             {/* Dynamic pages */}
             <Route path="detail/:uid" element={<Detail />} />
-            <Route path="detail-new/:uid" element={<DetailNew />} />
+            {/* <Route path="detail-new/:uid" element={<DetailNew />} /> */}
 
             {/* Add Entry pages */}
             <Route path="add/check" element={<AddCheck />} />
