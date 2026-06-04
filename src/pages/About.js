@@ -27,7 +27,7 @@ can either send us an email to [info@opted.eu](mailto:info@opted.eu) or also pok
 tweet [@OPTED_H2020](https://twitter.com/OPTED_H2020).
 
 In case some technical aspect is not working you can raise an issue in our 
-[GitHub repository](https://github.com/opted-eu).
+[GitHub repository](https://github.com/MEDem-eu).
 
 &nbsp;
 

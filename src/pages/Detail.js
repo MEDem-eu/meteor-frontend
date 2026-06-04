@@ -420,7 +420,7 @@ const Detail = () => {
   };
 
   const correction_email = () => {
-    let email_to = "info@opted.eu";
+    let email_to = "jakob-moritz.eberl@univie.ac.at";
     let email_subject = "Correction for " + item.name + " (" + item.uid + ")";
     let email_body =
       "Dear Meteor Team,%0D%0A" +
