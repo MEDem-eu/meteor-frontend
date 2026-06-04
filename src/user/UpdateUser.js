@@ -3,7 +3,7 @@ import '@material/web/textfield/filled-text-field.js'
 import '@material/web/button/filled-button.js';
 import '@material/web/button/text-button.js';
 import '@material/web/switch/switch.js';
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import SearchSelectBox from "../forms/SearchSelectBox";
 import { useClient } from "../client/ClientProvider";
 
@@ -14,6 +14,8 @@ const UpdateUser = () => {
     const [role, setRole] = useState();
     const [error, setError] = useState(null);
     const { uid } = useParams();
+    const location = useLocation();
+    const editedUser = location.state;
 
     async function updateUser() {
         const response = await clientFetchGet('admin/users/' + uid + '?role=' + role);
@@ -64,6 +66,12 @@ const UpdateUser = () => {
                     <form onSubmit={handleSubmitUpdateUser}>
                         <div className="divTable">
                             <h3>Update User {uid}</h3>
+                            {editedUser && (
+                                <div className="profile">
+                                    <p><strong>Display Name:</strong> {editedUser.display_name}</p>
+                                    <p><strong>Email:</strong> {editedUser.email}</p>
+                                </div>
+                            )}
 
                             <div className='profile'>
                                 <h4>Role</h4>

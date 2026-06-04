@@ -82,7 +82,15 @@ const Users = () => {
                                     <div className="divTableCell">{item.display_name}</div>
                                     <div className="divTableCell">{item.role}</div>
                                     <div className="divTableCell"><md-filled-button type="button"
-                                                                                    onClick={() => navigate('/admin/users/' + item.uid)}>Change Role
+                                                                                    onClick={() =>
+                                                                                        navigate('/admin/users/' + item.uid, {
+                                                                                            state: {
+                                                                                            email: item.email,
+                                                                                            display_name: item.display_name,
+                                                                                            },
+                                                                                        })
+                                                                                        }>
+                                                                                        Change Role
                                     </md-filled-button></div>
                                 </div>
                             ))}
