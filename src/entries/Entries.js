@@ -7,39 +7,102 @@ import { useClient } from "../client/ClientProvider";
 const Entries = () => {
 
     const navigate = useNavigate();
-    const [showTab, setShowTab] = useState('1');
-    const [entriesPending, setEntriesPending] = useState([]);
-    const [entriesAccepted, setEntriesAccepted] = useState([]);
-    const [entriesRejected, setEntriesRejected] = useState([]);
+    const PAGE_SIZE = 100;
+
+    const [showTab, setShowTab] = useState('pending');
+
+    const [entriesByStatus, setEntriesByStatus] = useState({
+        pending: [],
+        accepted: [],
+        rejected: [],
+    });
+
+    const [pagesByStatus, setPagesByStatus] = useState({
+        pending: -1,
+        accepted: -1,
+        rejected: -1,
+    });
+
+    const [hasMoreByStatus, setHasMoreByStatus] = useState({
+        pending: true,
+        accepted: true,
+        rejected: true,
+    });
+
+    const [loadedByStatus, setLoadedByStatus] = useState({
+        pending: false,
+        accepted: false,
+        rejected: false,
+    });
+
+    const [loadingByStatus, setLoadingByStatus] = useState({
+        pending: false,
+        accepted: false,
+        rejected: false,
+    });
 
     const { profile, isLoggedIn, isLoading, clientFetchGet } = useClient();
-    const [count, setCount] = useState('Loading')
-    const [entriesLoaded, setEntriesLoaded] = useState(false)
 
 
-    const fetchItemData = async () => {
-        try {
-            const response = await clientFetchGet("user/" + profile.uid + "/entries");
-
-            const data = await response.json();
-
-            setCount(data?.length)
-            createEntryArrays(data)
-        } catch (err) {
-            console.log(err);
-        } finally {
-            setEntriesLoaded(true)
-        }
-    }
-
-
-    useEffect(() => {
-        if (isLoading || !isLoggedIn || !profile?.uid || entriesLoaded) {
+    const fetchEntriesForStatus = async (status, page = 0) => {
+        if (loadingByStatus[status]) {
             return;
         }
 
-        fetchItemData()
-    }, [isLoading, isLoggedIn, profile?.uid, entriesLoaded])
+        setLoadingByStatus(prev => ({
+            ...prev,
+            [status]: true,
+        }));
+
+        try {
+            const response = await clientFetchGet(
+                "user/" + profile.uid + "/entries?entry_review_status=" + status + "&page=" + page
+            );
+
+            const data = await response.json();
+
+            setEntriesByStatus(prev => ({
+                ...prev,
+                [status]: page === 0 ? data : prev[status].concat(data),
+            }));
+
+            setPagesByStatus(prev => ({
+                ...prev,
+                [status]: page,
+            }));
+
+            setHasMoreByStatus(prev => ({
+                ...prev,
+                [status]: data.length === PAGE_SIZE,
+            }));
+
+            setLoadedByStatus(prev => ({
+                ...prev,
+                [status]: true,
+            }));
+        } catch (err) {
+            console.log(err);
+        } finally {
+            setLoadingByStatus(prev => ({
+                ...prev,
+                [status]: false,
+            }));
+        }
+    };
+
+    useEffect(() => {
+        if (
+            isLoading ||
+            !isLoggedIn ||
+            !profile?.uid ||
+            loadedByStatus[showTab] ||
+            loadingByStatus[showTab]
+        ) {
+            return;
+        }
+
+        fetchEntriesForStatus(showTab, 0);
+    }, [isLoading, isLoggedIn, profile?.uid, showTab, loadedByStatus, loadingByStatus]);
 
     const getQuery = (un) => {
         return '/detail/' + un
@@ -71,144 +134,99 @@ const Entries = () => {
         setShowTab(t)
     }
 
-    const createEntryArrays = (data) => {
 
-        try {
-            let ep = data.filter(function (ep) {
-                return ep.entry_review_status === 'pending';
-            });
-            setEntriesPending(ep)
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        } finally {
-        }
+    const renderEntry = (item, isRejected = false) => (
+        <div className="infobox" key={item.uid}>
+            <div style={{float: 'right'}}>
+                <md-filled-button
+                    type="button"
+                    onClick={() => navigate(isRejected ? '/rejected/' + item.uid : '/detail/' + item._unique_name)}
+                >
+                    View
+                </md-filled-button>
 
+                {!isRejected && (
+                    <>
+                        &nbsp;&nbsp;
+                        <md-filled-button
+                            type="button"
+                            onClick={() => navigate('/edit/' + item.uid)}
+                        >
+                            Edit
+                        </md-filled-button>
+                    </>
+                )}
+            </div>
 
-        try {
-            let ea = data.filter(function (ea) {
-                return ea.entry_review_status === 'accepted';
-            });
-            setEntriesAccepted(ea)
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        } finally {
-        }
+            <h4><Link to={getQuery(item._unique_name)}>{item.name}</Link></h4>
+            <p><strong>{getDgraph(item)}</strong></p>
+            <p>
+                {item.entry_review_status}<br/>
+                {retDate(item._date_created)}
+            </p>
+        </div>
+    );
 
-        try {
-            let er = data.filter(function (er) {
-                return er.entry_review_status === 'rejected';
-            });
-            setEntriesRejected(er)
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        } finally {
-        }
+    const renderLoadMore = (status) => (
+        hasMoreByStatus[status] && (
+            <p align="center">
+                <md-filled-button
+                    type="button"
+                    onClick={() => fetchEntriesForStatus(status, pagesByStatus[status] + 1)}
+                >
+                    {loadingByStatus[status] ? "Loading..." : "Load more"}
+                </md-filled-button>
+            </p>
+        )
+    );    
 
-    }
 
     return (
         <>
             <h1>My Entries</h1>
 
-            <p align="center"><strong>{ count }</strong> record{ count === 1 ? "" : "s"} in total</p>
+            <p align="center">
+                <strong>{entriesByStatus[showTab].length}</strong> loaded record{entriesByStatus[showTab].length === 1 ? "" : "s"}
+            </p>
 
             <md-tabs>
                 <md-primary-tab
-                    onClick={() => goTabs('1')}>
+                    onClick={() => goTabs('pending')}>
                     Pending
                 </md-primary-tab>
                 <md-primary-tab
-                    onClick={() => goTabs('2')}>
+                    onClick={() => goTabs('accepted')}>
                     Accepted
                 </md-primary-tab>
                 <md-primary-tab
-                    onClick={() => goTabs('3')}>
+                    onClick={() => goTabs('rejected')}>
                     Rejected
                 </md-primary-tab>
             </md-tabs>
 
-            {entriesLoaded && isLoggedIn && (
+            {isLoggedIn && (
                 <>
-                    {showTab === '1' && (
+                    {showTab === 'pending' && (
                         <div role="tabpanel" id="panel-one" aria-labelledby="tab-one" className='tab_panel'>
 
-                            {entriesPending?.map(item => (
-                                <>
-                                    <div className="infobox" key={item.uid}>
-                                        <div style={{float: 'right'}}>
-                                            <md-filled-button type="button"
-                                                              onClick={() => navigate('/detail/' + item._unique_name)}>View
-                                            </md-filled-button>
-                                            &nbsp;&nbsp;
-                                            <md-filled-button type="button"
-                                                              onClick={() => navigate('/edit/' + item.uid)}>Edit
-                                            </md-filled-button>
-                                        </div>
-                                        <h4><Link to={getQuery(item._unique_name)}>{item.name}</Link>
-                                        </h4>
-                                        <p><strong>{getDgraph(item)}</strong></p>
-                                        <p>
-                                            {item.entry_review_status}<br/>
-                                            {retDate(item._date_created)}
-                                        </p>
-                                    </div>
-
-                                </>
-                            ))}
+                            {entriesByStatus.pending?.map(item => renderEntry(item))}
+                            {renderLoadMore('pending')}
 
                         </div>
                     )}
-                    {showTab === '2' && (
+                    {showTab === 'accepted' && (
                         <div role="tabpanel" id="panel-two" aria-labelledby="tab-two" className='tab_panel'>
 
-                            {entriesAccepted?.map(item => (
-                                <>
-                                    <div className="infobox" key={item.uid}>
-                                        <div style={{float: 'right'}}>
-                                            <md-filled-button type="button"
-                                                              onClick={() => navigate('/detail/' + item._unique_name)}>View
-                                            </md-filled-button>
-                                            &nbsp;&nbsp;
-                                            <md-filled-button type="button"
-                                                              onClick={() => navigate('/edit/' + item.uid)}>Edit
-                                            </md-filled-button>
-                                        </div>
-                                        <h4><Link to={getQuery(item._unique_name)}>{item.name}</Link>
-                                        </h4>
-                                        <p><strong>{getDgraph(item)}</strong></p>
-                                        <p>
-                                            {item.entry_review_status}<br/>
-                                            {retDate(item._date_created)}
-                                        </p>
-                                    </div>
-
-                                </>
-                            ))}
+                            {entriesByStatus.accepted?.map(item => renderEntry(item))}
+                            {renderLoadMore('accepted')}
 
                         </div>
                     )}
-                    {showTab === '3' && (
+                    {showTab === 'rejected' && (
                         <div role="tabpanel" id="panel-three" aria-labelledby="tab-three" className='tab_panel'>
 
-                            {entriesRejected?.map(item => (
-                                <>
-                                    <div className="infobox" key={item.uid}>
-                                        <div style={{float: 'right'}}>
-                                            <md-filled-button type="button"
-                                                              onClick={() => navigate('/rejected/' + item.uid)}>View
-                                            </md-filled-button>
-                                        </div>
-                                        <h4><Link to={getQuery(item._unique_name)}>{item.name}</Link>
-                                        </h4>
-                                        <p><strong>{getDgraph(item)}</strong></p>
-                                        <p>
-                                            {item.entry_review_status}<br/>
-                                            {retDate(item._date_created)}
-                                        </p>
-                                    </div>
-
-                                </>
-                            ))}
+                            {entriesByStatus.rejected?.map(item => renderEntry(item, true))}
+                            {renderLoadMore('rejected')}
 
                         </div>
                     )}
