@@ -4,7 +4,6 @@ import "@material/web/textfield/filled-text-field.js";
 import "@material/web/textfield/outlined-text-field.js";
 import '@material/web/button/outlined-button.js';
 import "@material/web/button/filled-button.js";
-import "@material/web/checkbox/checkbox.js";
 import "@material/web/button/text-button.js";
 import { useClient } from "../client/ClientProvider";
 
@@ -15,7 +14,7 @@ export default function Login({ entry = "login" }) {
   const navigate = useNavigate();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
-  const [rememberMe, setRememberMe] = useState();
+  const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState(null);
   const [searchParams] = useSearchParams();
 
@@ -35,6 +34,11 @@ export default function Login({ entry = "login" }) {
     verificationError =
       "Verification link is expired or invalid! Please try resending a verification Email and if the problem persits please contact us.";
   }
+
+  // for debugging
+  useEffect(() => {
+    console.log("rememberMe state:", rememberMe);
+  }, [rememberMe]);
 
   useEffect(() => {
     if (entry === "login") {
@@ -116,12 +120,16 @@ export default function Login({ entry = "login" }) {
         </div>
 
         <div className="login-register">
-          <md-checkbox
-            touch-target="wrapper"
-            name="rememberMe"
-            onBlur={(e) => setRememberMe(e.target.value)}
-          />
-          <span style={{ position: "relative", top: "10px" }}>Remember Me</span>
+          <label className="remember-me">
+            <input
+              className="remember-me-checkbox"
+              type="checkbox"
+              name="rememberMe"
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
+            />
+            <span>Remember Me</span>
+          </label>
         </div>
 
         {error && (

@@ -176,6 +176,24 @@ body{
     margin-bottom: 10px;
 }
 
+.remember-me {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  min-height: 48px;
+  cursor: pointer;
+}
+
+.remember-me-checkbox {
+  width: 18px;
+  height: 18px;
+  margin: 12px;
+  accent-color: var(--color-secondary);
+  cursor: pointer;
+}
+
+
+
 .profile{
     width: 100%;
 }
