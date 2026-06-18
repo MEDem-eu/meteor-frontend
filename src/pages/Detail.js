@@ -617,7 +617,7 @@ const Detail = () => {
             </md-text-button>
           </p>
 
-          <h1>{item.name}</h1>
+          <h1 className="detail-title">{item.name}</h1>
 
           <div
             className="divHeader"

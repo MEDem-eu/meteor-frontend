@@ -1,3 +1,18 @@
+
+.detail-title {
+    box-sizing: border-box;
+    height: auto;
+    min-height: 8rem;
+    padding: 1.5rem 2rem;
+    text-align: center;
+    line-height: 1.2;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
+
+
+
 /* DivTable.com */
 
 .divHeader{
