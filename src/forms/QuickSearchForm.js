@@ -10,7 +10,7 @@ const QuickSearchForm = () => {
 
     // handle input change event
     const handleInputChange = value => {
-        setValue(value);
+        setValue(value || '');
     };
 
     // handle selection
@@ -18,12 +18,15 @@ const QuickSearchForm = () => {
         navigate("/detail/" + value._unique_name);
     }
 
-    // load options using API call
     const loadOptions = (inputValue) => {
         inputValue = inputValue.trim().toLowerCase();
-        if (inputValue.length >= 3) {
-            return fetch(`${process.env.REACT_APP_API}quicksearch?term=${inputValue}`).then(res => res.json());
+
+        if (inputValue.length < 3) {
+            return Promise.resolve([]);
         }
+
+        return fetch(`${process.env.REACT_APP_API}quicksearch?term=${inputValue}`)
+            .then(res => res.json());
     };
 
     const placeholderComponent = (
@@ -77,6 +80,11 @@ const QuickSearchForm = () => {
                 onInputChange={handleInputChange}
                 onChange={handleChangeQS}
                 placeholder={placeholderComponent}
+                noOptionsMessage={() =>
+                    inputValue.trim().length < 3
+                        ? "Please enter at least 3 letters"
+                        : "No results found"
+                }
             />
         </>
     )
