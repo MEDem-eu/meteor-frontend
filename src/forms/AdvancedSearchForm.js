@@ -2251,7 +2251,7 @@ const AdvancedSearchForm = ({ searchParams }) => {
                         placeholder="Enter keywords..."
                         name="free_text"
                         value={freeText.slice(8)}
-                        onBlur={event => {
+                        onInput={event => {
                             const { value } = event.target;
                             if (value) {
                                 setFreeText('&_terms=' + value)

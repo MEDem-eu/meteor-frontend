@@ -35,11 +35,6 @@ export default function Login({ entry = "login" }) {
       "Verification link is expired or invalid! Please try resending a verification Email and if the problem persits please contact us.";
   }
 
-  // for debugging
-  useEffect(() => {
-    console.log("rememberMe state:", rememberMe);
-  }, [rememberMe]);
-
   useEffect(() => {
     if (entry === "login") {
       // add listener for pressing 'Enter' button
