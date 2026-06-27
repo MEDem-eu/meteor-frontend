@@ -30,8 +30,7 @@ However, the Meteor is not responsible for contents on any other websites.
 - Department of Communication, University of Vienna
 - Kolingasse 14-16
 - 1090 Vienna, Austria
-- info@opted.eu
-
+- info@medem.eu
 `
 
 const licence_text = `
