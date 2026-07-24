@@ -23,7 +23,7 @@ and with the contribution of resources from other OPTED Work Packages:
 ## Contact
 
 You can reach us via various means. If you have feedback or questions you 
-can either send us an email to [info@medem.eu](mailto:info@medem.eu) or poke us 
+can either send us an email to [meteor@medem.eu](mailto:meteor@medem.eu) or poke us 
 [@medem.bsky.social](https://bsky.app/profile/medem.bsky.social).
 
 In case some technical aspect is not working you can raise an issue in our 
