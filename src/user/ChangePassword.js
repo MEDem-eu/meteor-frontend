@@ -1,19 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "@material/web/textfield/filled-text-field.js";
-import "@material/web/textfield/outlined-text-field.js";
 import "@material/web/button/filled-button.js";
-import "@material/web/checkbox/checkbox.js";
-import "@material/web/button/text-button.js";
 import { useClient } from "../client/ClientProvider";
+import PasswordField from "../components/PasswordField";
 
 const ChangePassword = () => {
   const { profile, isLoading, clientFetchPost, logout } = useClient();
   const navigate = useNavigate();
   const [error, setError] = useState(null);
-  const [old_pw, setOldPassword] = useState();
-  const [new_pw, setNewPassword] = useState();
-  const [confirm_new, setConfirmPassword] = useState();
+  const [old_pw, setOldPassword] = useState("");
+  const [new_pw, setNewPassword] = useState("");
+  const [confirm_new, setConfirmPassword] = useState("");
 
   useEffect(() => {
     if (isLoading) {
@@ -52,28 +49,34 @@ const ChangePassword = () => {
       <h2>Change Password</h2>
       <form onSubmit={handleSubmit}>
         <div className="login-register">
-          <md-filled-text-field
+          <PasswordField
             label="Old Password"
-            type="password"
-            onBlur={(e) => setOldPassword(e.target.value)}
+            name="old_password"
+            value={old_pw}
+            onInput={(e) => setOldPassword(e.target.value)}
+            autoComplete="current-password"
             required
           />
         </div>
 
         <div className="login-register">
-          <md-filled-text-field
+          <PasswordField
             label="New Password"
-            type="password"
-            onBlur={(e) => setNewPassword(e.target.value)}
+            name="new_password"
+            value={new_pw}
+            onInput={(e) => setNewPassword(e.target.value)}
+            autoComplete="new-password"
             required
           />
         </div>
 
         <div className="login-register">
-          <md-filled-text-field
+          <PasswordField
             label="Confirm Password"
-            type="password"
-            onBlur={(e) => setConfirmPassword(e.target.value)}
+            name="confirm_new_password"
+            value={confirm_new}
+            onInput={(e) => setConfirmPassword(e.target.value)}
+            autoComplete="new-password"
             required
           />
         </div>

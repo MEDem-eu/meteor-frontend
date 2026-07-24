@@ -28,6 +28,14 @@ const Home = () => {
       if (event.code === "Enter" || event.code === "NumpadEnter") {
         //console.log(document.activeElement.getAttribute('name'))
         if (
+          document.activeElement?.matches(
+            "button, md-icon-button, md-filled-button, md-outlined-button, md-text-button",
+          )
+        ) {
+          return;
+        }
+
+        if (
           document.activeElement.getAttribute("name") === "username" ||
           document.activeElement.getAttribute("name") === "password" ||
           document.activeElement.getAttribute("name") === "rememberMe"

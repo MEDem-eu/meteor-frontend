@@ -15,21 +15,17 @@ h1 {
 
 a{
     color: var(--color-link);
-    text-decoration: none !important;
+    text-decoration: none;
 }
 
 a:hover{
     color: var(--color-link);
-    text-decoration: underline !important;
+    text-decoration: underline;
 }
 
-
-
-
-
-
-
-
+.links-underlined{
+  text-decoration: underline;
+}
 
 footer{
     color: var(--color-text-secondary);

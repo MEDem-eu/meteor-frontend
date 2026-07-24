@@ -420,7 +420,7 @@ const Detail = () => {
   };
 
   const correction_email = () => {
-    let email_to = "jakob-moritz.eberl@univie.ac.at";
+    let email_to = "meteor@medem.eu";
     let email_subject = "Correction for " + item.name + " (" + item.uid + ")";
     let email_body =
       "Dear Meteor Team,%0D%0A" +
@@ -617,7 +617,7 @@ const Detail = () => {
             </md-text-button>
           </p>
 
-          <h1>{item.name}</h1>
+          <h1 className="detail-title">{item.name}</h1>
 
           <div
             className="divHeader"
