@@ -6,6 +6,7 @@ import '@material/web/switch/switch.js';
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import SearchSelectBox from "../forms/SearchSelectBox";
 import { useClient } from "../client/ClientProvider";
+import { USER_ROLE_OPTIONS } from "../constants/roles";
 
 const UpdateUser = () => {
 
@@ -45,13 +46,6 @@ const UpdateUser = () => {
 
     }
 
-    let options = [
-        {value: "10", label: "Admin"},
-        {value: "0", label: "Anon"},
-        {value: "1", label: "Contributor"},
-        {value: "2", label: "Reviewer"}
-        ]
-
 
     const handleChangeOption = (selectedOption) => {
         //console.log('Option')
@@ -77,7 +71,7 @@ const UpdateUser = () => {
                                 <h4>Role</h4>
                                 <SearchSelectBox
                                     handleChangeEntity={handleChangeOption}
-                                    searchOptions={options}
+                                    searchOptions={USER_ROLE_OPTIONS}
                                     multi={false}
                                     req={true}
                                 />
