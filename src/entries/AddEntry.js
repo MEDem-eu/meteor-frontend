@@ -1,7 +1,7 @@
 import {Link, useNavigate, useParams, useSearchParams} from "react-router-dom";
 import InfoIcon from '@mui/icons-material/Info';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import AddAsyncSelectBox from "../forms/AddAsyncSelectBox";
 import SearchTextField from "../forms/SearchTextField";
 import SearchSelectBox from "../forms/SearchSelectBox";
@@ -11,6 +11,7 @@ import SearchCheckbox from "../forms/SearchCheckbox";
 import DatePickerValue from "./DatePickerValue"
 import Magic from "./Magic"
 import { useClient } from "../client/ClientProvider";
+import { USER_ROLES } from "../constants/roles";
 
 
 
@@ -80,6 +81,24 @@ const AddEntry = () => {
             return {
                 status: 'error',
                 message: 'Edit request failed',
+            };
+        }
+    }
+
+    async function acceptRecord(uid) {
+        try {
+            const response = await clientFetchPost("review/submit", {
+                status: "accepted",
+                uid,
+            });
+
+            return response.json();
+        } catch (err) {
+            console.log(err);
+
+            return {
+                status: "error",
+                message: "Acceptance request failed",
             };
         }
     }
@@ -214,6 +233,10 @@ const AddEntry = () => {
     const [schema, setSchema] = useState(null);
     const [doc, setDoc] = useState();
     const [dockind, setDockind] = useState();
+
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [createdEntryLink, setCreatedEntryLink] = useState(null);
+    const submissionLockRef = useRef(false);
 
     // Async (A2)
     // entries included
@@ -1294,64 +1317,163 @@ const AddEntry = () => {
 
     // ************** Submit ****************
 
-    const handleSubmitAE = async e => {
-        e.preventDefault();
+    // const handleSubmitAE = async e => {
+    //     e.preventDefault();
 
-        // update dockind
-        handleChangeDockind()
+    //     // update dockind
+    //     handleChangeDockind()
 
-        if (1===1) {
-            let resp = null
+    //     if (1===1) {
+    //         let resp = null
 
-            // Ensure the session is still valid before submitting.
-            // clientFetch will attach the current access token to add/edit requests.
+    //         // Ensure the session is still valid before submitting.
+    //         // clientFetch will attach the current access token to add/edit requests.
 
+    //         const loggedIn = await checkLoginStatus();
+
+    //         if (!loggedIn) {
+    //             return;
+    //         }
+            
+
+    //         if (uid) {
+    //             //edit
+    //             //console.log('Editing record')
+    //             //console.log(json)
+    //             resp = await editRecord(
+    //                 uid,
+    //                 json
+    //             );
+    //         } else {
+    //             //add
+    //             //console.log('Adding record')
+    //             //console.log(json)
+    //             resp = await addRecord(
+    //                 entity,
+    //                 json
+    //             );
+    //         }
+    //         if (resp.status === 200) {
+    //             setAddResponse(resp);
+    //             setError(null)
+    //             navigate('/detail/' + (resp._unique_name || resp.uid))
+    //         } else {
+    //             if (resp.status === 'success') {
+    //                 setAddResponse(resp);
+    //                 setError(null)
+    //                 navigate('/detail/' + (resp._unique_name || resp.uid))
+    //             } else {
+    //                 let msg = resp.message
+    //                 if (!msg){
+    //                     msg = resp.msg
+    //                 }
+    //                 setError(msg)
+    //             }
+    //         }
+    //     } else {
+    //         setAddResponse(json)
+    //     }
+
+    // }
+
+
+    const handleSubmitAE = async (event) => {
+        event.preventDefault();
+
+        // Prevent duplicate requests before React has re-rendered the buttons.
+        if (submissionLockRef.current) {
+            return;
+        }
+
+        const createAndAccept =
+            event.nativeEvent.submitter?.dataset.createAndAccept === "true";
+
+        submissionLockRef.current = true;
+        setIsSubmitting(true);
+        setError(null);
+        setCreatedEntryLink(null);
+
+        try {
+            // Preserve the form's existing preprocessing.
+            handleChangeDockind();
+
+            // Preserve the existing authentication handling.
             const loggedIn = await checkLoginStatus();
 
             if (!loggedIn) {
                 return;
             }
-            
+
+            let creationResponse;
 
             if (uid) {
-                //edit
-                //console.log('Editing record')
-                //console.log(json)
-                resp = await editRecord(
-                    uid,
-                    json
-                );
+                // Preserve the existing edit workflow.
+                creationResponse = await editRecord(uid, json);
             } else {
-                //add
-                //console.log('Adding record')
-                //console.log(json)
-                resp = await addRecord(
-                    entity,
-                    json
-                );
+                // The backend creates the entry as pending.
+                creationResponse = await addRecord(entity, json);
             }
-            if (resp.status === 200) {
-                setAddResponse(resp);
-                setError(null)
-                navigate('/detail/' + (resp._unique_name || resp.uid))
-            } else {
-                if (resp.status === 'success') {
-                    setAddResponse(resp);
-                    setError(null)
-                    navigate('/detail/' + (resp._unique_name || resp.uid))
-                } else {
-                    let msg = resp.message
-                    if (!msg){
-                        msg = resp.msg
-                    }
-                    setError(msg)
+
+            const creationSucceeded =
+                creationResponse.status === 200 ||
+                creationResponse.status === "success";
+
+            if (!creationSucceeded) {
+                setError(
+                    creationResponse.message ||
+                    creationResponse.msg ||
+                    "Add request failed"
+                );
+
+                // Do not attempt acceptance when creation failed.
+                return;
+            }
+
+            setAddResponse(creationResponse);
+
+            const createdUid = creationResponse.uid;
+            const entryRouteId =
+                creationResponse._unique_name || createdUid;
+
+            if (createAndAccept) {
+                // Creation succeeded, but accepting requires the backend UID.
+                if (!createdUid) {
+                    setCreatedEntryLink(
+                        entryRouteId ? `/detail/${entryRouteId}` : null
+                    );
+
+                    setError(
+                        "Entry created successfully, but automatic acceptance failed. " +
+                        "It remains pending and can be accepted from the review overview."
+                    );
+
+                    return;
+                }
+
+                const acceptanceResponse = await acceptRecord(createdUid);
+
+                if (acceptanceResponse.status !== 200) {
+                    setCreatedEntryLink(
+                        entryRouteId ? `/detail/${entryRouteId}` : null
+                    );
+
+                    setError(
+                        "Entry created successfully, but automatic acceptance failed. " +
+                        "It remains pending and can be accepted from the review overview."
+                    );
+
+                    // Do not retry creation.
+                    return;
                 }
             }
-        } else {
-            setAddResponse(json)
-        }
 
-    }
+            // This preserves the existing success behavior.
+            navigate(`/detail/${entryRouteId}`);
+        } finally {
+            submissionLockRef.current = false;
+            setIsSubmitting(false);
+        }
+    };
 
 
     // ************** Display ****************
@@ -3671,15 +3793,54 @@ const AddEntry = () => {
                                     </div>
                                 )}
 
-                                <div style={{clear:"both", "marginTop":10}}>
+                                {/* <div style={{clear:"both", "marginTop":10}}>
                                     <md-filled-button id="submitForm" type="submit">{uid ? 'Edit' : 'Add'}&nbsp;{entity}</md-filled-button>&nbsp;
+                                </div> */}
+
+                                <div style={{ clear: "both", marginTop: 10 }}>
+                                    <md-filled-button
+                                        id="submitForm"
+                                        type="submit"
+                                        disabled={isSubmitting ? true : undefined}
+                                    >
+                                        {uid ? "Edit" : "Add"}&nbsp;{entity}
+                                    </md-filled-button>
+                                    &nbsp;
+
+                                    {!uid &&
+                                        Number(profile?.role) >=
+                                            USER_ROLES.MEDEM_INTERNAL_REVIEWER && (
+                                            <md-filled-button
+                                                type="submit"
+                                                data-create-and-accept="true"
+                                                disabled={isSubmitting ? true : undefined}
+                                            >
+                                                Add and Accept Review
+                                            </md-filled-button>
+                                        )}
                                 </div>
 
                             </form>
 
-                            {error &&
+                            {/* {error &&
                                 <p className={'message'}>{error}</p>
-                            }
+                            } */}
+
+                            {error && (
+                                <p className="message">
+                                    {error}
+
+                                    {createdEntryLink && (
+                                        <>
+                                            {" "}
+                                            <Link to={createdEntryLink}>
+                                                View created entry
+                                            </Link>
+                                            .
+                                        </>
+                                    )}
+                                </p>
+                            )}
 
                             {process.env.NODE_ENV === "development" &&
                                 <>
