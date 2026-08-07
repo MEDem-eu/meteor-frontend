@@ -10,17 +10,31 @@ const DetailListSourcesIncluded = ({ items }) => {
 
     // TODO: Add sorting by countries
     let sorted_by_type = {}
-    for (let item of items) {
-        let item_type = item['dgraph.type'].filter(e => e !== 'Entry')[0]
-        if (!Object.keys(sorted_by_type).includes(item_type)) {
+    // for (let item of items) {
+    //     let item_type = item['dgraph.type'].filter(e => e !== 'Entry')[0]
+    //     if (!Object.keys(sorted_by_type).includes(item_type)) {
+    //         sorted_by_type[item_type] = []
+    //     }
+    //     sorted_by_type[item_type].push(item)  
+    // }
+    for (const item of items ?? []) {
+        const item_type = item?.['dgraph.type']?.find(
+            type => type !== 'Entry'
+        )
+
+        if (!item_type) {
+            console.warn(
+                'Skipping unresolved sources_included reference:',
+                item?.uid
+            )
+            continue
+        }
+
+        if (!sorted_by_type[item_type]) {
             sorted_by_type[item_type] = []
         }
-        sorted_by_type[item_type].push(item)  
-        // if (item_type === 'NewsSource') {
-        //     // sorted_by_type[item_type].push(<LinkNewsSource item={item} />)
-        //     sorted_by_type[item_type].push(item)
-        // } else {
-            // sorted_by_type[item_type].push(<Link to={getLink(item._unique_name)}>{item.name}</Link>)
+
+        sorted_by_type[item_type].push(item)
     }
 
     
