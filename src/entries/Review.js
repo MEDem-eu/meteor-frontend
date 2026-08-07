@@ -5,13 +5,19 @@ import DetailHeader from "../components/DetailHeader";
 
 import { useClient } from "../client/ClientProvider";
 
+import { USER_ROLES } from "../constants/roles";
+
 
 const Review = () => {
 
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const [items, setItems] = useState([]);
-    const { profile, isLoggedIn, isLoading, clientFetchGet } = useClient();
+    const { profile, isLoggedIn, isLoading, clientFetchGet, clientFetchPost } = useClient();
+
+    const [acceptingUid, setAcceptingUid] = useState(null);
+    const [quickAcceptMessage, setQuickAcceptMessage] = useState(null);
+    const [quickAcceptError, setQuickAcceptError] = useState(null);
 
     var query = ''
     for (let param of searchParams) {
@@ -101,6 +107,53 @@ const Review = () => {
         "uid": "0x3f84e"
     },
      */
+
+
+    const quickAccept = async (item) => {
+        if (acceptingUid !== null) {
+            return;
+        }
+
+        setAcceptingUid(item.uid);
+        setQuickAcceptMessage(null);
+        setQuickAcceptError(null);
+
+        try {
+            const response = await clientFetchPost("review/submit", {
+                status: "accepted",
+                uid: item.uid,
+            });
+
+            const result = await response.json();
+
+            if (result.status !== 200) {
+                setQuickAcceptError(
+                    result.message ||
+                    result.msg ||
+                    `Could not accept "${item.name}".`
+                );
+
+                return;
+            }
+
+            // Remove the accepted entry from the pending review overview.
+            setItems(currentItems =>
+                currentItems.filter(currentItem => currentItem.uid !== item.uid)
+            );
+
+            setQuickAcceptMessage(
+                `"${item.name}" was accepted successfully.`
+            );
+        } catch (err) {
+            console.log(err);
+
+            setQuickAcceptError(
+                `Could not accept "${item.name}". Please try again.`
+            );
+        } finally {
+            setAcceptingUid(null);
+        }
+    };
     return (
         <>
             <div>
@@ -111,6 +164,18 @@ const Review = () => {
                         {message &&
                             <div className="message">{message}</div>
                         }
+
+                        {quickAcceptMessage && (
+                            <div className="message">
+                                {quickAcceptMessage}
+                            </div>
+                        )}
+
+                        {quickAcceptError && (
+                            <div className="error">
+                                {quickAcceptError}
+                            </div>
+                        )}
 
                         {<ReviewFilterForm
                             searchParams={searchParams}
@@ -141,9 +206,41 @@ const Review = () => {
                                             </div>
                                             <div className="divTableCell">{retDate(item._added_by)}</div>
                                             <div className="divTableCell">{item._added_by?.display_name}</div>
-                                            <div className="divTableCell"><md-filled-button type="button"
+                                            {/* <div className="divTableCell"><md-filled-button type="button"
                                                                                             onClick={() => navigate('/detail/' + item._unique_name)}>Review
-                                            </md-filled-button></div>
+                                            </md-filled-button></div> */}
+                                            <div className="divTableCell"
+                                                style={{
+                                                    display: "flex",
+                                                    alignItems: "center",
+                                                    gap: "8px",
+                                                    flexWrap: "nowrap",
+                                                }}>
+                                                <md-filled-button
+                                                    type="button"
+                                                    onClick={() => navigate(`/detail/${item._unique_name}`)}
+                                                    disabled={acceptingUid !== null ? true : undefined}
+                                                >
+                                                    Review
+                                                </md-filled-button>
+
+                                                {Number(profile?.role) >=
+                                                    USER_ROLES.MEDEM_INTERNAL_REVIEWER && (
+                                                    <>
+                                                        &nbsp;
+
+                                                        <md-filled-button
+                                                            type="button"
+                                                            onClick={() => quickAccept(item)}
+                                                            disabled={acceptingUid !== null ? true : undefined}
+                                                        >
+                                                            {acceptingUid === item.uid
+                                                                ? "Accepting..."
+                                                                : "Quick Accept"}
+                                                        </md-filled-button>
+                                                    </>
+                                                )}
+                                            </div>
                                         </div>
                                     ))}
                                 </>
