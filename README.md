@@ -14,14 +14,14 @@ Current state: **Production**
 
 - Install Node: https://nodejs.org/en/download
 - Clone this repository
-- set the server address in `.env` (e.g., `REACT_APP_API=https://meteor.opted.eu/api/`)
+- set the server address in `.env` (e.g., `REACT_APP_API=https://meteor.medem.eu/api/`)
 - run `npm install`
 - start development server with `npm start`
 
 ## Production Deployment
 
 - Clone this repository
-- set the server address in `.env` (e.g., `REACT_APP_API=https://meteor.opted.eu/api/`)
+- set the server address in `.env` (e.g., `REACT_APP_API=https://meteor.medem.eu/api/`)
 - run `npm install`
 - test server with `npm start`
 - install `serve` as root user with `npm install -g serve`
