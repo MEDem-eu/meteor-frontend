@@ -2,10 +2,10 @@ import Markdown from "react-markdown";
 
 const about_text = `# About
 
-OPTED Meteor is a research platform addresses the increasing demand 
+MEDem Meteor is a research platform addresses the increasing demand 
 for text analysis tools and training resources among the social science community 
 interested in using political texts. 
-OPTED Meteor organise and link these resources in a systematic way that makes them easy to 
+MEDem Meteor organise and link these resources in a systematic way that makes them easy to 
 search, easy to access and easy to utilize. 
 For more details on the development of the research platform please visit [opted.eu](https://opted.eu/) 
 for more information about the project.
