@@ -69,7 +69,7 @@ const Profile = () => {
                   for administrative purposes only and not visible for other
                   users. However, feel free to add more information about
                   yourself.{" "}
-                  <Link to="/privacy">
+                  <Link className="links-underlined" to="/privacy">
                     More information on data storage and security can be found
                     here
                   </Link>

@@ -1,21 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import "@material/web/textfield/filled-text-field.js";
-import "@material/web/textfield/outlined-text-field.js";
-import '@material/web/button/outlined-button.js';
+import "@material/web/button/outlined-button.js";
 import "@material/web/button/filled-button.js";
-import "@material/web/checkbox/checkbox.js";
 import "@material/web/button/text-button.js";
 import { useClient } from "../client/ClientProvider";
-
+import PasswordField from "../components/PasswordField";
 
 export default function Login({ entry = "login" }) {
   const { login } = useClient();
 
   const navigate = useNavigate();
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
-  const [rememberMe, setRememberMe] = useState();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState(null);
   const [searchParams] = useSearchParams();
 
@@ -36,21 +34,6 @@ export default function Login({ entry = "login" }) {
       "Verification link is expired or invalid! Please try resending a verification Email and if the problem persits please contact us.";
   }
 
-  useEffect(() => {
-    if (entry === "login") {
-      // add listener for pressing 'Enter' button
-      const listener = (event) => {
-        if (event.code === "Enter" || event.code === "NumpadEnter") {
-          document.getElementById("submitFormLogin").click();
-        }
-      };
-      document.addEventListener("keydown", listener);
-      return () => {
-        document.removeEventListener("keydown", listener);
-      };
-    }
-  }, []);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -63,15 +46,6 @@ export default function Login({ entry = "login" }) {
     }
   };
 
-  const changeEmail = (e) => {
-    console.log("email changed", e);
-    setEmail(e.target.value);
-  };
-
-  const changePassword = (e) => {
-    console.log("password changed", e);
-    setPassword(e.target.value);
-  };
 
   return (
     <div>
@@ -93,35 +67,42 @@ export default function Login({ entry = "login" }) {
         </>
       )}
       <form onSubmit={handleSubmit}>
+
         <div className="login-register">
-          <strong>Email:</strong>
-          <br />
-          <input
+          <md-filled-text-field
+            label="Email"
             type="email"
             name="username"
-            onChange={(e) => changeEmail(e)}
+            value={email}
+            onInput={(e) => setEmail(e.target.value)}
+            autoComplete="username"
             required
           />
         </div>
 
+
         <div className="login-register">
-          <strong>Password:</strong>
-          <br />
-          <input
-            type="password"
+          <PasswordField
+            label="Password"
             name="password"
-            onChange={(e) => setPassword(e.target.value)}
+            value={password}
+            onInput={(e) => setPassword(e.target.value)}
+            autoComplete="current-password"
             required
           />
         </div>
 
         <div className="login-register">
-          <md-checkbox
-            touch-target="wrapper"
-            name="rememberMe"
-            onBlur={(e) => setRememberMe(e.target.value)}
-          />
-          <span style={{ position: "relative", top: "10px" }}>Remember Me</span>
+          <label className="remember-me">
+            <input
+              className="remember-me-checkbox"
+              type="checkbox"
+              name="rememberMe"
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
+            />
+            <span>Remember Me</span>
+          </label>
         </div>
 
         {error && (
@@ -141,7 +122,13 @@ export default function Login({ entry = "login" }) {
           </>
         )}
 
-        <div className={login_page ? "login-register md-button-on-white" : "login-register md-button-on-primary"}>
+        <div
+          className={
+            login_page
+              ? "login-register md-button-on-white"
+              : "login-register md-button-on-primary"
+          }
+        >
           <md-filled-button
             class="md-button-manual-outline"
             type="submit"
@@ -170,4 +157,3 @@ export default function Login({ entry = "login" }) {
     </div>
   );
 }
-

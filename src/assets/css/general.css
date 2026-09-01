@@ -14,18 +14,18 @@ h1 {
 }
 
 a{
-    color: var(--color-links);
-    text-decoration: none !important;
+    color: var(--color-link);
+    text-decoration: none;
 }
 
 a:hover{
-    color: var(--color-links);
-    text-decoration: underline !important;
+    color: var(--color-link);
+    text-decoration: underline;
 }
 
-
-
-
+.links-underlined{
+  text-decoration: underline;
+}
 
 footer{
     color: var(--color-text-secondary);

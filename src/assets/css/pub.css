@@ -162,6 +162,7 @@ body{
     border-radius: 10px;
     padding: 10px;
     color: var(--color-text);
+    --md-filled-text-field-container-color: white;
 }
 
 .home-login a{
@@ -175,6 +176,29 @@ body{
 .login-register, .profile{
     margin-bottom: 10px;
 }
+
+.login-register > md-filled-text-field {
+  width: 100%;
+  max-width: 280px;
+}
+
+.remember-me {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  min-height: 48px;
+  cursor: pointer;
+}
+
+.remember-me-checkbox {
+  width: 18px;
+  height: 18px;
+  margin: 12px;
+  accent-color: var(--color-secondary);
+  cursor: pointer;
+}
+
+
 
 .profile{
     width: 100%;

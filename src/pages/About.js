@@ -23,11 +23,11 @@ and with the contribution of resources from other OPTED Work Packages:
 ## Contact
 
 You can reach us via various means. If you have feedback or questions you 
-can either send us an email to [info@opted.eu](mailto:info@opted.eu) or also poke us with a 
-tweet [@OPTED_H2020](https://twitter.com/OPTED_H2020).
+can either send us an email to [meteor@medem.eu](mailto:meteor@medem.eu) or poke us 
+[@medem.bsky.social](https://bsky.app/profile/medem.bsky.social).
 
 In case some technical aspect is not working you can raise an issue in our 
-[GitHub repository](https://github.com/opted-eu).
+[GitHub repository](https://github.com/MEDem-eu).
 
 &nbsp;
 

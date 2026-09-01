@@ -281,7 +281,7 @@ const SearchForm = () => {
                         clearable={true}
                         placeholder={"Please choose..."}
                         required
-                        defaultValue={defaultEntityValue}
+                        // defaultValue={defaultEntityValue}
                     />
                 </div>
                 {entity.slice(-4) !== 'Tool' && entity.slice(-7) !== 'Dataset' && entity.slice(-7) !== 'Archive' &&

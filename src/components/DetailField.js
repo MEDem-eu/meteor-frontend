@@ -1,5 +1,6 @@
 import React from 'react';
 import {Link} from "react-router-dom";
+import { getUserRoleLabel } from "../constants/roles";
 
 const DetailField = ({ d, s, t, u=null, w=null, query_predicate="country" }) => {
 
@@ -124,7 +125,7 @@ const DetailField = ({ d, s, t, u=null, w=null, query_predicate="country" }) => 
                                                         t === 'un' ? <span style={{wordBreak: "break-all"}}>{d}</span> :
                                                             t === 'user' ? d :
                                                                 t === 'role' ?
-                                                                    (d === 1 ? "Contributor" : "Admin") :
+                                                                    getUserRoleLabel(d) :
                                                                     formatText(d)
                         }
                     </div>

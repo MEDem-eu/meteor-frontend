@@ -29,7 +29,6 @@ const AddAsyncSelectBox = ({ handleChangeEntity, searchValues, types, width=300,
                 //console.log(api)
             }
             if (predicate === 'authors') {
-                //const openalex_url = 'https://api.openalex.org/autocomplete/authors?q=' + encodeURIComponent(inputValue) + '&author_hint=institution&mailto=info@opted.eu'
                 const openalex_url = 'https://api.openalex.org/authors?filter=display_name.search:' + encodeURIComponent(inputValue)
                 return Promise.all([
                     fetch(api)
