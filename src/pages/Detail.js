@@ -425,7 +425,7 @@ const Detail = () => {
     let email_body =
       "Dear Meteor Team,%0D%0A" +
       "%0D%0A" +
-      "I browsed your website and noticed that something is wrong in this entry: https://meteor.opted.eu/view/uid/" +
+      "I browsed your website and noticed that something is wrong in this entry: https://meteor.medem.eu/view/uid/" +
       item.uid +
       ".%0D%0A" +
       "%0D%0A" +
